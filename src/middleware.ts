@@ -18,6 +18,7 @@ export default authMiddleware({
     console.log("hostname", hostname);
     console.log("pathName", url.pathname);
 
+    console.log("public domain", `${process.env.NEXT_PUBLIC_DOMAIN}`);
     const pathWithSearchParams = `${url.pathname}${
       searchParams.length > 0 ? `?${searchParams}` : ""
     }`;
