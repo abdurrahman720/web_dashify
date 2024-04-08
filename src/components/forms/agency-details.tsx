@@ -14,6 +14,7 @@ import {
 import { useForm } from "react-hook-form";
 import * as z from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { Form, FormControl, FormField, FormItem, FormLabel } from "../ui/form";
 
 type Props = {
   data?: Partial<Agency>;
@@ -37,7 +38,7 @@ const AgencyDetails = ({ data }: Props) => {
   const { toast } = useToast();
   const router = useRouter();
   const [deletingAgency, setDeletingAgency] = useState(false);
-  const { handleSubmit, reset } = useForm<z.infer<typeof FormSchema>>({
+  const form = useForm<z.infer<typeof FormSchema>>({
     mode: "onChange",
     resolver: zodResolver(FormSchema),
     defaultValues: {
@@ -53,12 +54,17 @@ const AgencyDetails = ({ data }: Props) => {
       agencyLogo: data?.agencyLogo,
     },
   });
+    
+    const isLoading = form.formState.isSubmitting;
+    
+    const handleSubmit = async () => { }
+    
 
   useEffect(() => {
     if (data) {
-      reset(data);
+      form.reset(data);
     }
-  }, [data, reset]);
+  }, [data,form]); //added form as dependency
 
   return (
     <AlertDialog>
@@ -70,7 +76,25 @@ const AgencyDetails = ({ data }: Props) => {
             later from the agency settings tab.
           </CardDescription>
         </CardHeader>
-        <CardContent></CardContent>
+        <CardContent>
+          <Form {...form}>
+            <form
+              onSubmit={form.handleSubmit(handleSubmit)}
+              className="space-y-4"
+            >
+                          <FormField disabled={isLoading} control={form.control} name="agencyLogo"
+                              render={({ field }) => (
+                                  <FormItem>
+                                      <FormLabel>Agency Logo</FormLabel>
+                                      <FormControl></FormControl>
+                              </FormItem>
+                          )}
+                          >
+                              
+              </FormField>
+            </form>
+          </Form>
+        </CardContent>
       </Card>
     </AlertDialog>
   );
