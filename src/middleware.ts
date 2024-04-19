@@ -13,12 +13,12 @@ export default authMiddleware({
     const searchParams = url.searchParams.toString();
     let hostname = req.headers;
 
-    console.log("url", url);
-    // console.log("searchParams", searchParams);
-    console.log("hostname", hostname);
-    console.log("pathName", url.pathname);
+    // console.log("url", url);
+ // console.log("searchParams", searchParams);
+    // console.log("hostname", hostname);
+    // console.log("pathName", url.pathname);
 
-    console.log("public domain", `${process.env.NEXT_PUBLIC_DOMAIN}`);
+    // console.log("public domain", `${process.env.NEXT_PUBLIC_DOMAIN}`);
     const pathWithSearchParams = `${url.pathname}${
       searchParams.length > 0 ? `?${searchParams}` : ""
     }`;
