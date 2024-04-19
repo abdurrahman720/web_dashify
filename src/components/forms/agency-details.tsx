@@ -28,6 +28,8 @@ import FileUpload from "../global/file-upload";
 import { Input } from "../ui/input";
 import { Switch } from "../ui/switch";
 import { saveActivityLogNotification, updateAgencyDetails } from "@/lib/queries";
+import { Button } from "../ui/button";
+import Loading from "../global/loading";
 
 type Props = {
   data?: Partial<Agency>;
@@ -273,10 +275,12 @@ const AgencyDetails = ({ data }: Props) => {
                     className="bg-background !border !border-input"
                     placeholder="Sub Account Goal"
                   
-                  
-                  ></NumberInput>
+                  />
                 </div>
               )}
+              <Button type="submit" disabled={isLoading} >
+                {isLoading ? <Loading/> : 'Save Agency Information'}
+              </Button>
             </form>
           </Form>
         </CardContent>
