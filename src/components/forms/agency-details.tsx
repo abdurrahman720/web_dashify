@@ -91,46 +91,47 @@ const AgencyDetails = ({ data }: Props) => {
 
   const handleSubmit = async (values: z.infer<typeof FormSchema>) => {
     try {
-      let newUserData;
+     let newUserData;
       let custId;
-      if (!data?.id) {
-        const bodyData = {
-          email: values.companyEmail,
-          name: values.name,
-          shipping: {
-            address: {
-              city: values.city,
-              country: values.country,
-              line1: values.address,
-              postal_code: values.zipCode,
-              state: values.zipCode,
-            },
-            name: values.name,
-          },
-          address: {
-            city: values.city,
-            country: values.country,
-            line1: values.address,
-            postal_code: values.zipCode,
-            state: values.zipCode,
-          },
-        };
+      // if (!data?.id) {
+      //   const bodyData = {
+      //     email: values.companyEmail,
+      //     name: values.name,
+      //     shipping: {
+      //       address: {
+      //         city: values.city,
+      //         country: values.country,
+      //         line1: values.address,
+      //         postal_code: values.zipCode,
+      //         state: values.zipCode,
+      //       },
+      //       name: values.name,
+      //     },
+      //     address: {
+      //       city: values.city,
+      //       country: values.country,
+      //       line1: values.address,
+      //       postal_code: values.zipCode,
+      //       state: values.zipCode,
+      //     },
+      //   };
 
-        const customerResponse = await fetch("/api/stripe/create-customer", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(bodyData),
-        });
-        const customerData: { customerId: string } =
-          await customerResponse.json();
+      //   const customerResponse = await fetch("/api/stripe/create-customer", {
+      //     method: "POST",
+      //     headers: {
+      //       "Content-Type": "application/json",
+      //     },
+      //     body: JSON.stringify(bodyData),
+      //   });
+      //   const customerData: { customerId: string } =
+      //     await customerResponse.json();
 
-        custId = customerData.customerId;
-      }
+      //   custId = customerData.customerId;
+      // }
 
       newUserData = await initUser({ role: "AGENCY_OWNER" });
-      if (!data?.customerId && !custId) return;
+      console.log(newUserData);
+      // if (!data?.customerId && !custId) return;
 
       const response = await upsertAgency({
         id: data?.id ? data.id : v4(),
@@ -155,6 +156,7 @@ const AgencyDetails = ({ data }: Props) => {
       });
       if (data?.id) return router.refresh();
       if (response) {
+        console.log(response)
         return router.refresh();
       }
     } catch (error) {
