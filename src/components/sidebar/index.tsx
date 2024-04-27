@@ -62,7 +62,6 @@ const Sidebar = async ({ id, type }: Props) => {
         user={user}
       />
       <MenuOptions
-
         details={details}
         id={id}
         sideBarLogo={sideBarLogo}
