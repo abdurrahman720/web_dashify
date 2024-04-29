@@ -73,7 +73,7 @@ const MenuOptions = ({
         </Button>
       </SheetTrigger>
       <SheetContent
-        showX={!defaultOpen} //added this into sheet content interface
+        showX={!defaultOpen} //NOTE: added this into sheet content interface
         side={"left"}
         className={clsx(
           "bg-background/80 backdrop-blur-xl fixed top-0 border-r-[1px] p-6",

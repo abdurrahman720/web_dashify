@@ -41,6 +41,7 @@ const Page = async ({
   // if the don't have subaccount, they are not agency owner or admin and they are just new here
 
   const authUser = await currentUser();
+  console.log(authUser)
 
   return (
     <div className="flex justify-center items-center mt-4">

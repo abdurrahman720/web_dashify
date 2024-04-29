@@ -216,8 +216,6 @@ export const initUser = async (newUser: Partial<User>) => {
   }
 
   //update if user is in db, otherwise create @upsert
-
-
   const userData = await db.user.upsert({
     where: {
       email: user.emailAddresses[0].emailAddress,

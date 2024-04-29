@@ -102,9 +102,12 @@ const SubAccountDetails: React.FC<SubAccountDetailsProps> = ({
         goal: 5000,
       });
       if (!response) throw new Error("No response from server");
+
+     
+
       await saveActivityLogNotification({
         agencyId: response.agencyId,
-        description: `${userName} | updated sub account | ${response.name}`,
+        description: ` updated sub account | ${response?.name}`,  //TODO: removed userName ; need to check
         subaccountId: response.id,
       });
 
