@@ -219,10 +219,12 @@ const MenuOptions = ({
                       className="w-full flex gap-2"
                       onClick={() => {
                         setOpen(
+                          //custom data as modal
                           <CustomModal
                             title="Create a Sub Account"
                             subheading="You can switch between your agency account and the subaccount from the sidebar"
                           >
+                          
                             <SubAccountDetails
                               agencyDetails={user?.Agency as Agency}
                               userId={user?.id as string}
@@ -253,7 +255,7 @@ const MenuOptions = ({
                     //Getting the icon from contants and retriving the path as icon component
                     const result = icons.find((icon) => icon.value === sidebarOptions.icon)
                     if (result) {
-                      console.log(result)
+                     
                       val = <result.path/>
                     }
                     return (

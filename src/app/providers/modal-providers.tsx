@@ -27,41 +27,51 @@ export const ModalContext = createContext<ModalContextType>({
 });
 
 const ModalProvider: React.FC<ModalProviderProps> = ({ children }) => {
- const [isOpen, setIsOpen] = useState(false);
- const [data, setData] = useState<ModalData>({});
- const [showingModal, setShowingModal] = useState<React.ReactNode>(null);
- const [isMounted, setIsMounted] = useState(false);
+  const [isOpen, setIsOpen] = useState(false);
+  const [data, setData] = useState<ModalData>({});
+  const [showingModal, setShowingModal] = useState<React.ReactNode>(null);
+  const [isMounted, setIsMounted] = useState(false);
 
- useEffect(() => {
-   setIsMounted(true);
- }, []);
+  useEffect(() => {
+    setIsMounted(true);
+  }, []);
 
- const setOpen = async (
-   modal: React.ReactNode,
-   fetchData?: () => Promise<any>
- ) => {
-   if (modal) {
-     if (fetchData) {
-       setData({ ...data, ...(await fetchData()) } || {});
-     }
-     setShowingModal(modal);
-     setIsOpen(true);
-   }
- };
+  /**
+   * Takes modal as React.ReactNode argument and an optional fetchData() function that returns promise
+   * @type {Promise}
+   */
 
- const setClose = () => {
-   setIsOpen(false);
-   setData({});
- };
+  const setOpen = async (
+    modal: React.ReactNode,
+    fetchData?: () => Promise<any>
+  ) => {
+    if (modal) {
+      if (fetchData) {
+        setData({ ...data, ...(await fetchData()) } || {});
+      }
+      setShowingModal(modal);
+      setIsOpen(true);
+    }
+  };
 
- if (!isMounted) return null;
+  /**
+   * function that closes the modal
+   * @type {function}
+   */
 
- return (
-   <ModalContext.Provider value={{ data, setOpen, setClose, isOpen }}>
-     {children}
-     {showingModal}
-   </ModalContext.Provider>
- );
+  const setClose = () => {
+    setIsOpen(false);
+    setData({});
+  };
+
+  if (!isMounted) return null;
+
+  return (
+    <ModalContext.Provider value={{ data, setOpen, setClose, isOpen }}>
+      {children}
+      {showingModal}
+    </ModalContext.Provider>
+  );
 };
 
 export const useModal = () => {
