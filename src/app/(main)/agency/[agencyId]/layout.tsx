@@ -18,6 +18,8 @@ const layout = async ({ children, params }: Props) => {
   const agencyId = await verifyAndAcceptInvitation();
   const user = await currentUser();
 
+
+
   if (!user) {
     return redirect("/");
   }

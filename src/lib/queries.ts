@@ -35,6 +35,8 @@ export const getAuthUserDetails = async () => {
   return userData;
 };
 
+
+//User is only created only if invitation exists. otherwise user need to create an agency by purchasing the service
 export const createTeamUser = async (agencyId: string, user: User) => {
   if (user?.role === "AGENCY_OWNER") return null;
   const response = await db.user.create({
@@ -137,6 +139,7 @@ export const saveActivityLogNotification = async ({
 
 export const verifyAndAcceptInvitation = async () => {
   const user = await currentUser();
+
   if (!user) return redirect("sign-in");
 
   const invitationExists = await db.invitation.findUnique({
@@ -145,6 +148,8 @@ export const verifyAndAcceptInvitation = async () => {
       status: "PENDING",
     },
   });
+
+  console.log(invitationExists);
 
   if (invitationExists) {
     const userDetails = await createTeamUser(invitationExists.agencyId, {
@@ -182,12 +187,13 @@ export const verifyAndAcceptInvitation = async () => {
       return null;
     }
   } else {
-    const agency = await db.user.findUnique({
+    const dbUser = await db.user.findUnique({
       where: {
         email: user.emailAddresses[0].emailAddress,
       },
     });
-    return agency ? agency.agencyId : null;
+  
+    return dbUser ? dbUser.agencyId : null;
   }
 };
 

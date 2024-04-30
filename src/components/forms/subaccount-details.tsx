@@ -107,7 +107,7 @@ const SubAccountDetails: React.FC<SubAccountDetailsProps> = ({
 
       await saveActivityLogNotification({
         agencyId: response.agencyId,
-        description: ` updated sub account | ${response?.name}`,  //TODO: removed userName ; need to check
+        description: ` updated sub account | ${response?.name}`,  
         subaccountId: response.id,
       });
 
