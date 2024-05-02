@@ -9,7 +9,7 @@ import React, { useEffect, useState } from "react";
 import { useToast } from "../ui/use-toast";
 import { useRouter } from "next/navigation";
 import {
-    changeUserPermissions,
+  changeUserPermissions,
   getAuthUserDetails,
   getUserPermissions,
   saveActivityLogNotification,
@@ -48,6 +48,7 @@ import Loading from "../global/loading";
 import { Separator } from "../ui/separator";
 import { Switch } from "../ui/switch";
 import { v4 } from "uuid";
+import Image from "next/image";
 
 type Props = {
   id: string | null;
@@ -57,10 +58,12 @@ type Props = {
 };
 
 const UserDetails = ({ id, type, userData, subAccounts }: Props) => {
+  //the permissions with subaccount id of the user in modal . (not the authUser himself)
   const [subAccountPermissions, setSubAccountPermissions] =
     useState<UserWithPermissionsAndSubAccounts | null>(null);
 
   const { data, setClose } = useModal();
+  console.log(data);
 
   const [roleState, setRoleState] = useState("");
   const [loadingPermissions, setLoadingPermissions] = useState(false);
@@ -74,8 +77,11 @@ const UserDetails = ({ id, type, userData, subAccounts }: Props) => {
   //Get auth details
   useEffect(() => {
     if (data.user) {
+      console.log(data.user);
       const fetchDetails = async () => {
         const response = await getAuthUserDetails();
+
+        console.log(response);
         if (response) setAuthUserData(response);
       };
       fetchDetails();
@@ -111,6 +117,8 @@ const UserDetails = ({ id, type, userData, subAccounts }: Props) => {
     const getPermissions = async () => {
       if (!data.user) return;
       const permissions = await getUserPermissions(data.user.id);
+
+      //the permissions with subaccount id of the user in modal . (not the authUser himself)
       setSubAccountPermissions(permissions);
     };
     getPermissions();
@@ -124,61 +132,68 @@ const UserDetails = ({ id, type, userData, subAccounts }: Props) => {
       form.reset(userData);
     }
   }, [userData, data, form]); //NOTE: added form dependancy here
-    
-    
-    
-    
-    //TODO: need to check this function again...
-     const onChangePermission = async (
-       subAccountId: string,
-       val: boolean,
-       permissionsId: string | undefined
-     ) => {
-       if (!data.user?.email) return;
-       setLoadingPermissions(true);
-       const response = await changeUserPermissions(
-         permissionsId ? permissionsId : v4(),
-         data.user.email,
-         subAccountId,
-         val
-       );
-       if (type === "agency") {
-         await saveActivityLogNotification({
-           agencyId: authUserData?.Agency?.id,
-           description: `Gave ${userData?.name} access to | ${
-             subAccountPermissions?.Permissions.find(
-               (p) => p.subAccountId === subAccountId
-             )?.SubAccount.name
-           } `,
-           subaccountId: subAccountPermissions?.Permissions.find(
-             (p) => p.subAccountId === subAccountId
-           )?.SubAccount.id,
-         });
-       }
 
-       if (response) {
-         toast({
-           title: "Success",
-           description: "The request was successfull",
-         });
-         if (subAccountPermissions) {
-           subAccountPermissions.Permissions.find((perm) => {
-             if (perm.subAccountId === subAccountId) {
-               return { ...perm, access: !perm.access };
-             }
-             return perm;
-           });
-         }
-       } else {
-         toast({
-           variant: "destructive",
-           title: "Failed",
-           description: "Could not update permissions",
-         });
-       }
-       router.refresh();
-       setLoadingPermissions(false);
-     };
+  //TODO: need to check this function again...
+  const onChangePermission = async (
+    subAccountId: string,
+    val: boolean,
+    permissionsId: string | undefined,
+    subAccountName: string
+  ) => {
+    if (!data.user?.email) return;
+    setLoadingPermissions(true);
+    const response = await changeUserPermissions(
+      permissionsId ? permissionsId : v4(),
+      data.user.email,
+      subAccountId,
+      val
+    );
+    console.log(response);
+    if (type === "agency") {
+      console.log(data.user.name);
+      console.log(subAccountName);
+      console.log(
+        subAccountPermissions?.Permissions.find(
+          (p) => p.subAccountId === subAccountId
+        )?.SubAccount.name
+      );
+      console.log(
+        subAccountPermissions?.Permissions.find(
+          (p) => p.subAccountId === subAccountId
+        )?.SubAccount.name
+      );
+      await saveActivityLogNotification({
+        agencyId: authUserData?.Agency?.id,
+        description: `Gave ${data?.user?.name} access to | ${subAccountName} `,
+        subaccountId: subAccountPermissions?.Permissions.find(
+          (p) => p.subAccountId === subAccountId
+        )?.SubAccount.id,
+      });
+    }
+
+    if (response) {
+      toast({
+        title: "Success",
+        description: "The request was successfull",
+      });
+      if (subAccountPermissions) {
+        subAccountPermissions.Permissions.find((perm) => {
+          if (perm.subAccountId === subAccountId) {
+            return { ...perm, access: !perm.access };
+          }
+          return perm;
+        });
+      }
+    } else {
+      toast({
+        variant: "destructive",
+        title: "Failed",
+        description: "Could not update permissions",
+      });
+    }
+    router.refresh();
+    setLoadingPermissions(false);
+  };
 
   const onSubmit = async (values: z.infer<typeof userDataSchema>) => {
     if (!id) return;
@@ -341,10 +356,11 @@ const UserDetails = ({ id, type, userData, subAccounts }: Props) => {
                   access control for each Sub Account. This is only visible to
                   agency owners
                 </FormDescription>
-                              <div className="flex flex-col gap-4">
-                                  {subAccounts?.map((subAccount) => {
-                      //retrieve  permission for each subaccount of this agency
+                <div className="flex flex-col gap-4">
+                  {subAccounts?.map((subAccount) => {
+                    //retrieve  permission for each subaccount of this agency
                     const subAccountPermissionsDetails =
+                      //checking if the agency's subaccount permission is in data user's permission list
                       subAccountPermissions?.Permissions?.find(
                         (p) => p.subAccountId === subAccount.id
                       );
@@ -354,7 +370,13 @@ const UserDetails = ({ id, type, userData, subAccounts }: Props) => {
                         key={subAccount.id}
                         className="flex flex-col items-center justify-between rounded-lg border p-4"
                       >
-                        <div>
+                        <div className="flex items-center gap-2">
+                          <Image
+                            src={subAccount.subAccountLogo}
+                            alt={subAccount.name}
+                            width={50}
+                            height={50}
+                          />
                           <p className="">{subAccount.name}</p>
                         </div>
                         <Switch
@@ -364,7 +386,8 @@ const UserDetails = ({ id, type, userData, subAccounts }: Props) => {
                             onChangePermission(
                               subAccount.id,
                               permission,
-                              subAccountPermissionsDetails?.id
+                              subAccountPermissionsDetails?.id,
+                              subAccount.name
                             );
                           }}
                         />

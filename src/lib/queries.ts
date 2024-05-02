@@ -3,7 +3,7 @@
 import { auth, clerkClient, currentUser } from "@clerk/nextjs";
 import { db } from "./db";
 import { redirect } from "next/navigation";
-import { Agency, Plan, SubAccount, User } from "@prisma/client";
+import { Agency, Plan, Role, SubAccount, User } from "@prisma/client";
 import { userAgent } from "next/server";
 import { v4 } from "uuid";
 
@@ -79,6 +79,8 @@ export const saveActivityLogNotification = async ({
     });
   }
 
+  console.log(userData)
+
   if (!userData) {
     console.log("Could not find a user");
     return;
@@ -98,7 +100,10 @@ export const saveActivityLogNotification = async ({
   }
 
   if (subaccountId) {
+      console.log(userData.name);
+      console.log(description);
     await db.notification.create({
+      
       data: {
         notification: `${userData.name} | ${description}`,
         User: {
@@ -458,5 +463,72 @@ export const changeUserPermissions = async (
   } catch (error) {
     console.log("🔴Could not change persmission", error);
   }
+};
+
+export const getSubaccountDetails = async (subaccountId: string) => {
+  const response = await db.subAccount.findUnique({
+    where: {
+      id: subaccountId,
+    },
+  });
+  return response;
+};
+
+export const deleteSubAccount = async (subaccountId: string) => {
+  const response = await db.subAccount.delete({
+    where: {
+      id: subaccountId,
+    },
+  });
+  return response;
+};
+
+
+export const deleteUser = async (userId: string) => {
+  await clerkClient.users.updateUserMetadata(userId, {
+    privateMetadata: {
+      role: undefined,
+    },
+  });
+  const deletedUser = await db.user.delete({ where: { id: userId } });
+
+  return deletedUser;
+};
+
+export const getUser = async (id: string) => {
+  const user = await db.user.findUnique({
+    where: {
+      id,
+    },
+  });
+
+  return user;
+};
+
+
+export const sendInvitation = async (
+  role: Role,
+  email: string,
+  agencyId: string
+) => {
+  const resposne = await db.invitation.create({
+    data: { email, agencyId, role },
+  });
+
+  try {
+    const invitation = await clerkClient.invitations.createInvitation({
+      emailAddress: email,
+      redirectUrl: process.env.NEXT_PUBLIC_URL,
+      publicMetadata: {
+        throughInvitation: true,
+        role,
+      },
+    });
+  } catch (error) {
+    console.log(error);
+    throw error;
+  }
+
+  return resposne;
 };
 
