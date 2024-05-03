@@ -134,6 +134,7 @@ const UserDetails = ({ id, type, userData, subAccounts }: Props) => {
   }, [userData, data, form]); //NOTE: added form dependancy here
 
   //TODO: need to check this function again...
+  //FIXME: creating two records if access is false 
   const onChangePermission = async (
     subAccountId: string,
     val: boolean,

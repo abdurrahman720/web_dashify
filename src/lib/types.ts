@@ -1,5 +1,5 @@
 import { Notification, Prisma, Role } from "@prisma/client";
-import { getAuthUserDetails, getUserPermissions } from "./queries";
+import { getAuthUserDetails, getMedia, getUserPermissions } from "./queries";
 import { db } from "./db";
 
 export type NotificationWithUser =
@@ -44,3 +44,10 @@ const __getUsersWithAgencySubAccountPermissionsSidebarOptions = async (
     Prisma.PromiseReturnType<
       typeof __getUsersWithAgencySubAccountPermissionsSidebarOptions
     >;
+
+export type GetMediaFiles = Prisma.PromiseReturnType<typeof getMedia>
+    
+
+
+// we can create type withouth the relational field 
+    export type CreateMediaType = Prisma.MediaCreateWithoutSubaccountInput
