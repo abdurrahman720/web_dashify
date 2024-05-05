@@ -1,5 +1,5 @@
 import { Contact, Lane, Notification, Prisma, Role, Tag, Ticket, User } from "@prisma/client";
-import { getAuthUserDetails, getMedia, getUserPermissions } from "./queries";
+import { _getTicketsWithAllRelations, getAuthUserDetails, getMedia, getPipeLineDetails, getTicketsWithTags, getUserPermissions } from "./queries";
 import { db } from "./db";
 import { z } from "zod";
 
@@ -72,4 +72,27 @@ export const CreateFunnelFormSchema = z.object({
   description: z.string(),
   subDomainName: z.string().optional(),
   favicon: z.string().optional(),
+});
+
+export type PipelineDetailsWithLanesCardsTagsTickets = Prisma.PromiseReturnType<
+  typeof getPipeLineDetails
+  >;
+
+export const LaneFormSchema = z.object({
+    name:z.string().min(1)
+})
+  
+
+export type TicketWithTags = Prisma.PromiseReturnType<typeof getTicketsWithTags>
+
+export type TicketDetails = Prisma.PromiseReturnType<typeof _getTicketsWithAllRelations>
+
+const currencyNumberRegex = /^\d+(\.\d{1,2})?$/;
+
+export const TicketFormSchema = z.object({
+  name: z.string().min(1),
+  description: z.string().optional(),
+  value: z.string().refine((value) => currencyNumberRegex.test(value), {
+    message: "Value must be a valid price.",
+  }),
 });

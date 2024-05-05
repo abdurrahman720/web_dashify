@@ -3,7 +3,17 @@
 import { auth, clerkClient, currentUser } from "@clerk/nextjs";
 import { db } from "./db";
 import { redirect } from "next/navigation";
-import { Agency, Plan, Prisma, Role, SubAccount, User } from "@prisma/client";
+import {
+  Agency,
+  Lane,
+  Plan,
+  Prisma,
+  Role,
+  SubAccount,
+  Tag,
+  Ticket,
+  User,
+} from "@prisma/client";
 import { userAgent } from "next/server";
 import { v4 } from "uuid";
 import { CreateFunnelFormSchema, CreateMediaType } from "./types";
@@ -36,7 +46,6 @@ export const getAuthUserDetails = async () => {
 
   return userData;
 };
-
 
 //User is only created only if invitation exists. otherwise user need to create an agency by purchasing the service
 export const createTeamUser = async (agencyId: string, user: User) => {
@@ -81,7 +90,7 @@ export const saveActivityLogNotification = async ({
     });
   }
 
-  console.log(userData)
+  console.log(userData);
 
   if (!userData) {
     console.log("Could not find a user");
@@ -102,10 +111,9 @@ export const saveActivityLogNotification = async ({
   }
 
   if (subaccountId) {
-      console.log(userData.name);
-      console.log(description);
+    console.log(userData.name);
+    console.log(description);
     await db.notification.create({
-      
       data: {
         notification: `${userData.name} | ${description}`,
         User: {
@@ -199,33 +207,33 @@ export const verifyAndAcceptInvitation = async () => {
         email: user.emailAddresses[0].emailAddress,
       },
     });
-  
+
     return dbUser ? dbUser.agencyId : null;
   }
 };
 
-
-export const updateAgencyDetails = async (agencyId: string, agencyDetails: Partial<Agency>) => {
+export const updateAgencyDetails = async (
+  agencyId: string,
+  agencyDetails: Partial<Agency>
+) => {
   const response = await db.agency.update({
-    where: {id:agencyId},
-    data: { ...agencyDetails }
-  })
+    where: { id: agencyId },
+    data: { ...agencyDetails },
+  });
   return response;
-}
-
+};
 
 export const deleteAgency = async (agencyId: string) => {
   const response = await db.agency.delete({
     where: { id: agencyId },
-
-  })
+  });
   return response;
-}
+};
 
 export const initUser = async (newUser: Partial<User>) => {
   const user = await currentUser();
   if (!user) {
-    return 
+    return;
   }
 
   //update if user is in db, otherwise create @upsert
@@ -240,16 +248,15 @@ export const initUser = async (newUser: Partial<User>) => {
       email: user.emailAddresses[0].emailAddress,
       name: `${user.firstName}${user.lastName}`,
       role: newUser.role || "SUBACCOUNT_USER",
-
     },
   });
   await clerkClient.users.updateUserMetadata(user.id, {
     privateMetadata: {
-      role: newUser.role || 'SUBACCOUNT_USER'
-    }
-  })
+      role: newUser.role || "SUBACCOUNT_USER",
+    },
+  });
   return userData;
-}
+};
 
 export const upsertAgency = async (agency: Agency, price?: Plan) => {
   if (!agency.companyEmail) return null;
@@ -302,11 +309,11 @@ export const upsertAgency = async (agency: Agency, price?: Plan) => {
         },
       },
     });
-    return agencyDetails
-  } catch (error:any) {
-    console.log(error)
+    return agencyDetails;
+  } catch (error: any) {
+    console.log(error);
   }
-}
+};
 
 export const getNotificationAndUser = async (agencyId: string) => {
   try {
@@ -322,7 +329,6 @@ export const getNotificationAndUser = async (agencyId: string) => {
     console.log(error);
   }
 };
-
 
 export const upsertSubAccount = async (subAccount: SubAccount) => {
   if (!subAccount.companyEmail) return null;
@@ -342,8 +348,6 @@ export const upsertSubAccount = async (subAccount: SubAccount) => {
 
   // NOTE: Instead of creating a subAccount, we are using upsert that can both update and create partially.
   // We are creating Permissions (other table) at the same time connecting with subaccount. Same goes for PipeLine
-  
-
 
   const response = await db.subAccount.upsert({
     where: {
@@ -417,8 +421,7 @@ export const upsertSubAccount = async (subAccount: SubAccount) => {
   });
 
   return response;
-}
-
+};
 
 export const getUserPermissions = async (userId: string) => {
   const response = await db.user.findUnique({
@@ -485,7 +488,6 @@ export const deleteSubAccount = async (subaccountId: string) => {
   return response;
 };
 
-
 export const deleteUser = async (userId: string) => {
   await clerkClient.users.updateUserMetadata(userId, {
     privateMetadata: {
@@ -506,7 +508,6 @@ export const getUser = async (id: string) => {
 
   return user;
 };
-
 
 export const sendInvitation = async (
   role: Role,
@@ -534,7 +535,6 @@ export const sendInvitation = async (
   return resposne;
 };
 
-
 export const getMedia = async (subaccountId: string) => {
   const mediafiles = await db.subAccount.findUnique({
     where: {
@@ -545,18 +545,20 @@ export const getMedia = async (subaccountId: string) => {
   return mediafiles;
 };
 
-
-export const createMedia = async (subAccountId: string, mediaFile: CreateMediaType) => {
+export const createMedia = async (
+  subAccountId: string,
+  mediaFile: CreateMediaType
+) => {
   const response = await db.media.create({
     data: {
       link: mediaFile.link,
       name: mediaFile.name,
-      subAccountId:subAccountId
-    }
-  })
+      subAccountId: subAccountId,
+    },
+  });
 
   return response;
-}
+};
 
 export const deleteMedia = async (mediaId: string) => {
   const response = await db.media.delete({
@@ -570,12 +572,12 @@ export const deleteMedia = async (mediaId: string) => {
 export const getPipeLineDetails = async (pipelineId: string) => {
   const response = await db.pipeline.findUnique({
     where: {
-      id:pipelineId
-    }
-  })
+      id: pipelineId,
+    },
+  });
 
   return response;
-}
+};
 
 export const getLanesWithTicketAndTags = async (pipelineId: string) => {
   const response = await db.lane.findMany({
@@ -632,6 +634,204 @@ export const upsertPipeline = async (
 export const deletePipeline = async (pipelineId: string) => {
   const response = await db.pipeline.delete({
     where: { id: pipelineId },
+  });
+  return response;
+};
+
+export const updateLanesOrder = async (lanes: Lane[]) => {
+  try {
+    const updateTrans = lanes.map((lane) =>
+      db.lane.update({
+        where: {
+          id: lane.id,
+        },
+        data: {
+          order: lane.order,
+        },
+      })
+    );
+
+    await db.$transaction(updateTrans);
+    console.log("🟢 Done reordered 🟢");
+  } catch (error) {
+    console.log(error, "ERROR UPDATE LANES ORDER");
+  }
+};
+
+export const updateTicketsOrder = async (tickets: Ticket[]) => {
+  try {
+    const updateTrans = tickets.map((ticket) =>
+      db.ticket.update({
+        where: {
+          id: ticket.id,
+        },
+        data: {
+          order: ticket.order,
+          laneId: ticket.laneId,
+        },
+      })
+    );
+
+    await db.$transaction(updateTrans);
+    console.log("🟢 Done reordered 🟢");
+  } catch (error) {
+    console.log(error, "🔴 ERROR UPDATE TICKET ORDER");
+  }
+};
+
+export const upsertLane = async (lane: Prisma.LaneUncheckedCreateInput) => {
+  let order: number;
+
+  if (!lane.order) {
+    const lanes = await db.lane.findMany({
+      where: {
+        pipelineId: lane.pipelineId,
+      },
+    });
+
+    order = lanes.length;
+  } else {
+    order = lane.order;
+  }
+
+  const response = await db.lane.upsert({
+    where: { id: lane.id || v4() },
+    update: lane,
+    create: { ...lane, order },
+  });
+
+  return response;
+};
+
+export const deleteLane = async (laneId: string) => {
+  const resposne = await db.lane.delete({ where: { id: laneId } });
+  return resposne;
+};
+
+export const getTicketsWithTags = async (pipelineId: string) => {
+  const response = await db.ticket.findMany({
+    where: {
+      Lane: {
+        pipelineId: pipelineId,
+      },
+    },
+    include: { Tags: true, Assigned: true, Customer: true },
+  });
+  return response;
+};
+
+export const _getTicketsWithAllRelations = async (laneId: string) => {
+  const response = await db.ticket.findMany({
+    where: { laneId: laneId },
+    include: {
+      Assigned: true,
+      Customer: true,
+      Lane: true,
+      Tags: true,
+    },
+  });
+  return response;
+};
+
+export const getSubAccountTeamMembers = async (subaccountId: string) => {
+  const subaccountUsersWithAccess = await db.user.findMany({
+    where: {
+      Agency: {
+        SubAccount: {
+          some: {
+            id: subaccountId,
+          },
+        },
+      },
+      role: "SUBACCOUNT_USER",
+      Permissions: {
+        some: {
+          subAccountId: subaccountId,
+          access: true,
+        },
+      },
+    },
+  });
+  return subaccountUsersWithAccess;
+};
+
+export const searchContacts = async (searchTerms: string) => {
+  const response = await db.contact.findMany({
+    where: {
+      name: {
+        contains: searchTerms,
+      },
+    },
+  });
+  return response;
+};
+export const upsertTicket = async (
+  ticket: Prisma.TicketUncheckedCreateInput,
+  tags: Tag[]
+) => {
+  let order: number;
+  if (!ticket.order) {
+    const tickets = await db.ticket.findMany({
+      where: { laneId: ticket.laneId },
+    });
+    order = tickets.length;
+  } else {
+    order = ticket.order;
+  }
+
+  const response = await db.ticket.upsert({
+    where: {
+      id: ticket.id || v4(),
+    },
+    update: { ...ticket, Tags: { set: tags } },
+    create: { ...ticket, Tags: { connect: tags }, order },
+    include: {
+      Assigned: true,
+      Customer: true,
+      Tags: true,
+      Lane: true,
+    },
+  });
+
+  return response;
+};
+
+export const deleteTicket = async (ticketId: string) => {
+  const response = await db.ticket.delete({
+    where: {
+      id: ticketId,
+    },
+  });
+
+  return response;
+};
+
+export const upsertTag = async (
+  subAccountId: string,
+  tag: Prisma.TagUncheckedCreateInput
+) => {
+  const response = await db.tag.upsert({
+    where: {
+      id: tag.id || v4(),
+      subAccountId: subAccountId,
+    },
+    update: tag,
+    create: { ...tag, subAccountId: subAccountId },
+  });
+
+  return response;
+};
+
+
+export const deleteTag = async (tagId: string) => {
+  const response = await db.tag.delete({ where: { id: tagId } });
+  return response;
+};
+
+export const getTagsForSubaccount = async (subaccountId: string) => {
+  const response = await db.subAccount.findUnique({
+    where: { id: subaccountId },
+    select: { Tags: true },
   });
   return response;
 };
