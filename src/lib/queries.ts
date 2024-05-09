@@ -769,6 +769,7 @@ export const upsertTicket = async (
   ticket: Prisma.TicketUncheckedCreateInput,
   tags: Tag[]
 ) => {
+  console.log("🚀 ~ ticket:", ticket)
   let order: number;
   if (!ticket.order) {
     const tickets = await db.ticket.findMany({
@@ -832,6 +833,17 @@ export const getTagsForSubaccount = async (subaccountId: string) => {
   const response = await db.subAccount.findUnique({
     where: { id: subaccountId },
     select: { Tags: true },
+  });
+  return response;
+};
+
+export const upsertContact = async (
+  contact: Prisma.ContactUncheckedCreateInput
+) => {
+  const response = await db.contact.upsert({
+    where: { id: contact.id || v4() },
+    update: contact,
+    create: contact,
   });
   return response;
 };
