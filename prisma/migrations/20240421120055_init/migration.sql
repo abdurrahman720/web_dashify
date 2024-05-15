@@ -321,7 +321,7 @@ CREATE TABLE `Subscription` (
     `id` VARCHAR(191) NOT NULL,
     `createdAt` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
     `updatedAt` DATETIME(3) NOT NULL,
-    `plan` ENUM('price_1OYxkqFj9oKEERu1NbKUxXxN', 'price_1OYxkqFj9oKEERu1KfJGWxgN') NULL,
+    `plan` ENUM('price_1PEZnrJkWJQL2QGdOOw7lYaf', 'price_1PEZnrJkWJQL2QGd7VhMHpOK') NULL,
     `price` VARCHAR(191) NULL,
     `active` BOOLEAN NOT NULL DEFAULT false,
     `priceId` VARCHAR(191) NOT NULL,
