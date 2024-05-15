@@ -9,6 +9,7 @@ export const subscriptionCreated = async (
   subscription: Stripe.Subscription,
   customerId: string
 ) => {
+ 
   try {
     const agency = await db.agency.findFirst({
       where: {
@@ -23,21 +24,24 @@ export const subscriptionCreated = async (
       throw new Error("Could not find an agency to upsert subscripttion");
     }
 
+
     const data = {
       active: subscription.status === "active",
-      agencyId: agency.id,
+      agencyId: agency?.id,
       customerId,
       currentPeriodEndDate: new Date(subscription.current_period_end * 1000),
       //@ts-ignore
       priceId: subscription.plan.id,
       subscriptionId: subscription.id,
       //@ts-ignore
-      plan: subscription.pause_collection.id,
+      plan: subscription.plan.id,
     };
+
+
 
     const res = await db.subscription.upsert({
       where: {
-        agencyId: agency.id,
+        agencyId: agency?.id,
       },
       create: data,
       update: data,

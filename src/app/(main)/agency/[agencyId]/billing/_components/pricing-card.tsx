@@ -58,9 +58,6 @@ const PricingCard = ({
           customerId={customerId}
           planExists={planExists}
         />
-        <div>
-          Subscription modal
-        </div>
       </CustomModal>,
       async () => ({
         plans: {

@@ -25,7 +25,7 @@ const Page = async ({
       }
       //if user is from stripe, state will contain details
       if (searchParams?.state) {
-        const statePath = searchParams?.state?.split("__")[0];
+        const statePath = searchParams?.state?.split("___")[0];
         const stateAgencyId = searchParams?.state?.split("___")[1];
         if (!stateAgencyId) return <div>Not authorized</div>;
         //redirect from stripe using the code
