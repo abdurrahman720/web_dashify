@@ -9,7 +9,6 @@ export const subscriptionCreated = async (
   subscription: Stripe.Subscription,
   customerId: string
 ) => {
- 
   try {
     const agency = await db.agency.findFirst({
       where: {
@@ -24,7 +23,6 @@ export const subscriptionCreated = async (
       throw new Error("Could not find an agency to upsert subscripttion");
     }
 
-
     const data = {
       active: subscription.status === "active",
       agencyId: agency?.id,
@@ -36,8 +34,6 @@ export const subscriptionCreated = async (
       //@ts-ignore
       plan: subscription.plan.id,
     };
-
-
 
     const res = await db.subscription.upsert({
       where: {
@@ -52,7 +48,9 @@ export const subscriptionCreated = async (
   }
 };
 
-export const getConnectedAccountProducts = async (stripeAccount: string) => {
+export const getConnectAccountProducts = async (stripeAccount: string) => {
+
+
   const products = await stripe.products.list(
     {
       limit: 50,
@@ -62,5 +60,6 @@ export const getConnectedAccountProducts = async (stripeAccount: string) => {
       stripeAccount,
     }
   );
+
   return products.data;
 };

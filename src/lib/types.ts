@@ -1,5 +1,5 @@
 import { Contact, Lane, Notification, Prisma, Role, Tag, Ticket, User } from "@prisma/client";
-import { _getTicketsWithAllRelations, getAuthUserDetails, getMedia, getPipeLineDetails, getTicketsWithTags, getUserPermissions } from "./queries";
+import { _getTicketsWithAllRelations, getAuthUserDetails, getFunnels, getMedia, getPipeLineDetails, getTicketsWithTags, getUserPermissions } from "./queries";
 import { db } from "./db";
 import { z } from "zod";
 import Stripe from "stripe";
@@ -124,3 +124,7 @@ export type StripeCustomerType = {
 };
 
 export type PricesList = Stripe.ApiList<Stripe.Price>;
+
+export type FunnelsForSubAccount = Prisma.PromiseReturnType<
+  typeof getFunnels
+>[0];

@@ -39,6 +39,8 @@ const LaunchPadPage = async ({ searchParams, params }: Props) => {
        subaccountDetails.state;
   
   
+
+  //FIXME: change this OauthLink function into custom connecting system
     const stripeOAuthLink = getStripeOAuthLink(
       "subaccount",
       `launchpad___${subaccountDetails.id}`
