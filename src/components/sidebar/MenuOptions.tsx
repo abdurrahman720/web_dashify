@@ -63,10 +63,10 @@ const MenuOptions = ({
   );
 
   return (
-    <Sheet modal={false} {...openState} >
+    <Sheet modal={false} {...openState}>
       <SheetTrigger
         asChild
-        className="absolute left-4 top-4 z-[100] md:!hidden flex"
+        className="absolute left-4 top-4 z-[100] md:!hidden flex "
       >
         <Button variant="outline" size={"icon"}>
           <Menu />
@@ -224,7 +224,6 @@ const MenuOptions = ({
                             title="Create a Sub Account"
                             subheading="You can switch between your agency account and the subaccount from the sidebar"
                           >
-                          
                             <SubAccountDetails
                               agencyDetails={user?.Agency as Agency}
                               userId={user?.id as string}
@@ -249,29 +248,31 @@ const MenuOptions = ({
               <CommandInput placeholder="Search..." />
               <CommandList className="py-4 overflow-visible">
                 <CommandEmpty>No Results Found</CommandEmpty>
-                <CommandGroup  className="overflow-visible">
+                <CommandGroup className="overflow-visible">
                   {sideBarOpt.map((sidebarOptions) => {
                     let val;
                     //Getting the icon from contants and retriving the path as icon component
-                    const result = icons.find((icon) => icon.value === sidebarOptions.icon)
+                    const result = icons.find(
+                      (icon) => icon.value === sidebarOptions.icon
+                    );
                     if (result) {
-                     
-                      val = <result.path/>
+                      val = <result.path />;
                     }
                     return (
                       <CommandItem
                         key={sidebarOptions.id}
                         className="md:w-[320px] w-full"
                       >
-                        <Link href={sidebarOptions.link} className="flex items-center gap-2 hover:bg-transparent rounded-md transition-all md:w-full">
+                        <Link
+                          href={sidebarOptions.link}
+                          className="flex items-center gap-2 hover:bg-transparent rounded-md transition-all md:w-full"
+                        >
                           {val}
-                          <span className="">
-                            {sidebarOptions.name}
-                          </span>
+                          <span className="">{sidebarOptions.name}</span>
                         </Link>
                       </CommandItem>
                     );
-                })}
+                  })}
                 </CommandGroup>
               </CommandList>
             </Command>
