@@ -18,6 +18,8 @@ import React from "react";
 // import ComponentsTab from "./tabs/components-tab";
 import TabList from "./tabs";
 import { useEditor } from "@/app/providers/editor/editor-provider";
+import SettingsTab from "./tabs/settings-tab";
+import MediaBucketTab from "./tabs/media-bucket-tab";
 
 type Props = {
   subaccountId: string;
@@ -56,10 +58,11 @@ const FunnelEditorSidebar = ({ subaccountId }: Props) => {
                   like.
                 </SheetDescription>
               </SheetHeader>
-              {/* <SettingsTab /> */}
+              <SettingsTab />
             </TabsContent>
             <TabsContent value="Media">
-              {/* <MediaBucketTab subaccountId={subaccountId} /> */}
+              <MediaBucketTab subaccountId={subaccountId} />
+             
             </TabsContent>
             <TabsContent value="Components">
               <SheetHeader className="text-left p-6 ">
