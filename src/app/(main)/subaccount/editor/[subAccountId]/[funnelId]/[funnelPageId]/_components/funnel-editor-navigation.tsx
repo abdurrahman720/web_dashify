@@ -224,7 +224,7 @@ const FunnelEditorNavigation = ({
               <Switch disabled defaultChecked={true} />
               Publish
             </div>
-            <span className="text-muted-foreground text-sm">
+            <span   className="text-muted-foreground text-sm">
               Last updated {funnelPageDetails.updatedAt.toLocaleDateString()}
             </span>
           </div>
