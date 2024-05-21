@@ -10,18 +10,18 @@ const Page = async ({
   searchParams: { plan: Plan; state: string; code: string };
 }) => {
   const agencyId = await verifyAndAcceptInvitation();
-  console.log(agencyId);
+
 
   //get user details and redirect based on their roles
   const user = await getAuthUserDetails();
-  console.log(user);
+
 
   if (agencyId) {
     if (user?.role === "SUBACCOUNT_GUEST" || user?.role === "SUBACCOUNT_USER") {
       return redirect("/subaccount");
     } else if (user?.role === "AGENCY_OWNER" || user?.role === "AGENCY_ADMIN") {
       if (searchParams?.plan) {
-        redirect(`/agency/${agencyId}/building?plan=${searchParams?.plan}`);
+        redirect(`/agency/${agencyId}/billing?plan=${searchParams?.plan}`);
       }
       //if user is from stripe, state will contain details
       if (searchParams?.state) {

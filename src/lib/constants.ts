@@ -39,7 +39,7 @@ export const pricingCards = [
     priceId: "",
   },
   {
-    title: "Unlimited Saas",
+    title: "Unlimited SaaS",
     description: "The ultimate agency kit",
     price: "$199",
     duration: "month",
@@ -209,7 +209,6 @@ export const icons = [
     path: ClipboardIcon,
   },
 ];
-
 
 export type EditorBtns =
   | "text"
