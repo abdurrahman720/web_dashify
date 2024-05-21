@@ -29,7 +29,7 @@ type Props = {
 const FunnelEditorSidebar = ({ subaccountId }: Props) => {
   const { state, dispatch } = useEditor();
 
-  console.log(state.editor);
+  
 
   return (
     <Sheet open={true} modal={false}>

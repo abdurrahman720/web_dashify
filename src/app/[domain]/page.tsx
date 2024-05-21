@@ -1,5 +1,37 @@
-const Page = () => {
-  return <div>Domain</div>;
+import { db } from "@/lib/db";
+import { getDomainContent } from "@/lib/queries";
+import { notFound } from "next/navigation";
+import EditorProvider from "../providers/editor/editor-provider";
+import FunnelEditor from "../(main)/subaccount/editor/[subAccountId]/[funnelId]/[funnelPageId]/_components/funnel-editor";
+
+const Page = async ({ params }: { params: { domain: string } }) => {
+  const domainData = await getDomainContent(params.domain.slice(0, -1));
+
+  if (!domainData) return notFound();
+
+  const pageData = domainData.FunnelPages.find((page) => !page.pathName); //this page does not have a path name
+  if (!pageData) return notFound();
+
+  await db.funnelPage.update({
+    where: {
+      id: pageData.id,
+    },
+    data: {
+      visits: {
+        increment: 1,
+      },
+    },
+  });
+
+  return (
+    <EditorProvider
+      subaccountId={domainData.subAccountId}
+      pageDetails={pageData}
+      funnelId={domainData.id}
+    >
+      <FunnelEditor funnelPageId={pageData.id} liveMode={true} />
+    </EditorProvider>
+  );
 };
 
 export default Page;

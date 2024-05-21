@@ -77,14 +77,11 @@ const addAnElement = (
       "You sent the wrong action type to the Add Element editor State"
     );
   return editorArray.map((item) => {
-
-
     console.log(item); //item refers the single editor element (not the editor)
     console.log(action.payload); //will contain e container id of existing element id
-    console.log(item.content); //can be array that means it may have another editor element into it's array 
+    console.log(item.content); //can be array that means it may have another editor element into it's array
 
-
-// chekcing if the current editor element id and payloads container id is same and current editor elements content is an array... if that so, we are returning an object of current editorElement with updated content 
+    // chekcing if the current editor element id and payloads container id is same and current editor elements content is an array... if that so, we are returning an object of current editorElement with updated content
     if (item.id === action.payload.containerId && Array.isArray(item.content)) {
       return {
         ...item,
@@ -110,11 +107,11 @@ const updateAnElement = (
     throw Error("You sent the wrong action type to the update Element State");
   }
   return editorArray.map((item) => {
-    // chekcing if the current editor element id and payloads elements id is same 
+    // chekcing if the current editor element id and payloads elements id is same
     if (item.id === action.payload.elementDetails.id) {
       return { ...item, ...action.payload.elementDetails };
 
-      //id doesn't match so we need to check the inner content element 
+      //id doesn't match so we need to check the inner content element
     } else if (item.content && Array.isArray(item.content)) {
       return {
         ...item,
@@ -294,7 +291,6 @@ const editorReducer = (
       return toggleLiveMode;
 
     case "REDO":
-    
       if (state.history.currentIndex < state.history.history.length - 1) {
         const nextIndex = state.history.currentIndex + 1;
         const nextEditorState = { ...state.history.history[nextIndex] };
@@ -311,7 +307,6 @@ const editorReducer = (
       return state;
 
     case "UNDO":
-     
       if (state.history.currentIndex > 0) {
         const prevIndex = state.history.currentIndex - 1;
         const prevEditorState = { ...state.history.history[prevIndex] };

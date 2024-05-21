@@ -15,6 +15,8 @@ type Props = {
 };
 
 const FunnelPageId = async ({ params }: Props) => {
+
+
   const funnelPageDetails = await db.funnelPage.findFirst({
     where: {
       id: params.funnelPageId,

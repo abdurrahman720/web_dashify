@@ -17,14 +17,15 @@ type Props = {
 
 const Container = ({ element }: Props) => {
   const { id, content, name, styles, type } = element;
+
   const { dispatch, state } = useEditor();
+
+
 
   const handleOnDrop = (e: React.DragEvent, type: string) => {
     e.stopPropagation();
 
-      const componentType = e.dataTransfer.getData("componentType") as EditorBtns;
-      
-      console.log(componentType)
+    const componentType = e.dataTransfer.getData("componentType") as EditorBtns;
 
     switch (componentType) {
       case "text":
@@ -160,36 +161,36 @@ const Container = ({ element }: Props) => {
         break;
     }
   };
-    
-    const handleDragOver = (e: React.DragEvent) => {
-      e.preventDefault();
-    };
 
-     const handleDragStart = (e: React.DragEvent, type: string) => {
-         if (type === "__body") return;
-         //we are attaching componenttype metadata type
-       e.dataTransfer.setData("componentType", type);
-     };
-    
-    const handleOnClickBody = (e: React.MouseEvent) => {
-        e.stopPropagation();
-       
-      dispatch({
-        type: "CHANGE_CLICKED_ELEMENT",
-        payload: {
-          elementDetails: element,
-        },
-      });
-    };
+  const handleDragOver = (e: React.DragEvent) => {
+    e.preventDefault();
+  };
 
-    const handleDeleteElement = () => {
-      dispatch({
-        type: "DELETE_ELEMENT",
-        payload: {
-          elementDetails: element,
-        },
-      });
-    };
+  const handleDragStart = (e: React.DragEvent, type: string) => {
+    if (type === "__body") return;
+    //we are attaching componenttype metadata type
+    e.dataTransfer.setData("componentType", type);
+  };
+
+  const handleOnClickBody = (e: React.MouseEvent) => {
+    e.stopPropagation();
+
+    dispatch({
+      type: "CHANGE_CLICKED_ELEMENT",
+      payload: {
+        elementDetails: element,
+      },
+    });
+  };
+
+  const handleDeleteElement = () => {
+    dispatch({
+      type: "DELETE_ELEMENT",
+      payload: {
+        elementDetails: element,
+      },
+    });
+  };
 
   return (
     <div
