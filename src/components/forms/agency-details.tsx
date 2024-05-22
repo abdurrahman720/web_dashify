@@ -92,7 +92,7 @@ const AgencyDetails = ({ data }: Props) => {
 
   const handleSubmit = async (values: z.infer<typeof FormSchema>) => {
     try {
-     let newUserData;
+      let newUserData;
       let custId;
       if (!data?.id) {
         const bodyData = {
@@ -131,7 +131,7 @@ const AgencyDetails = ({ data }: Props) => {
       }
 
       newUserData = await initUser({ role: "AGENCY_OWNER" });
-  
+
       if (!data?.customerId && !custId) return;
 
       const response = await upsertAgency({
@@ -152,12 +152,12 @@ const AgencyDetails = ({ data }: Props) => {
         connectAccountId: "",
         goal: 5,
       });
-      toast({
-        title: "Created Agency",
-      });
+
       if (data?.id) return router.refresh();
       if (response) {
-
+        toast({
+          title: "Created Agency",
+        });
         return router.refresh();
       }
     } catch (error) {

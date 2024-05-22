@@ -9,9 +9,9 @@ generator client {
 }
 
 datasource db {
-  provider = "mysql"
+  provider = "postgresql"
   url      = env("DATABASE_URL")
-  relationMode = "prisma"
+  // relationMode = "prisma"
 }
 
 enum Role {
@@ -317,7 +317,7 @@ model ClassName {
   createdAt  DateTime @default(now())
   updatedAt  DateTime @updatedAt
   funnelId   String
-  customData String?  @db.LongText
+  customData String?  @db.Text
   Funnel     Funnel   @relation(fields: [funnelId], references: [id], onDelete: Cascade)
 
   @@index([funnelId])
@@ -330,7 +330,7 @@ model FunnelPage {
   createdAt    DateTime @default(now())
   updatedAt    DateTime @updatedAt
   visits       Int      @default(0)
-  content      String?  @db.LongText
+  content      String?  @db.Text
   order        Int
   previewImage String?  @db.Text
   funnelId     String
@@ -402,14 +402,14 @@ model Notification {
 }
 
 enum Plan {
- price_1PEZnrJkWJQL2QGdOOw7lYaf
- price_1PEZnrJkWJQL2QGd7VhMHpOK
+  price_1PEZnrJkWJQL2QGdOOw7lYaf
+  price_1PEZnrJkWJQL2QGd7VhMHpOK
 }
 
 model Subscription {
   id        String   @id @default(uuid())
   createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  updatedAt DateTime @default(now())
   plan      Plan?
   price     String?
   active    Boolean  @default(false)
@@ -417,7 +417,7 @@ model Subscription {
   priceId              String
   customerId           String
   currentPeriodEndDate DateTime
-  subscriptionId     String   @unique
+  subscriptionId       String   @unique
 
   agencyId String? @unique
   Agency   Agency? @relation(fields: [agencyId], references: [id])
@@ -428,7 +428,7 @@ model Subscription {
 model AddOns {
   id        String   @id @default(uuid())
   createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  updatedAt DateTime @default(now())
   name      String
   active    Boolean  @default(false)
   priceId   String   @unique
