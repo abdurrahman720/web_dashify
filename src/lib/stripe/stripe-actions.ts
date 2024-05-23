@@ -42,14 +42,13 @@ export const subscriptionCreated = async (
       create: data,
       update: data,
     });
-    console.log("🚀 ~ subscriptionCreated ~ res:", res.subscriptionId);
+   
   } catch (error) {
     console.log("🚀 ~ error ~ res:", error);
   }
 };
 
 export const getConnectAccountProducts = async (stripeAccount: string) => {
-
 
   const products = await stripe.products.list(
     {

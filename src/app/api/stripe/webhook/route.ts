@@ -49,13 +49,12 @@ export async function POST(req: Request) {
         switch (stripeEvent.type) {
           case "customer.subscription.created": {
             if (subscription.status === "active") {
-              console.log("subscription status", subscription.status);
+             
               const res = await subscriptionCreated(
                 subscription,
                 subscription.customer as string
               );
-              console.log("🚀 ~ POST ~ res:", res);
-              console.log("CREATED FROM WEBHOOK 💳", subscription);
+             
             } else {
               console.log(
                 "SKIPPED AT CREATED FROM WEBHOOK 💳 because subscription status is not active",

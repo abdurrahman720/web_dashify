@@ -58,9 +58,9 @@ const Page = async({ params }: Props) => {
       { stripeAccount: agencyDetails.connectAccountId }
     )
 
-    console.log({startDate,endDate})
+  
 
-    console.log(checkoutSessions)
+    // console.log(checkoutSessions)
   
 
     sessions = checkoutSessions.data;

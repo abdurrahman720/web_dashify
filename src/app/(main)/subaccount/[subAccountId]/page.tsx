@@ -10,7 +10,16 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
+
+import {
+  Table,
+  TableBody,
+  TableCaption,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
 import { db } from "@/lib/db";
 import { stripe } from "@/lib/stripe";
 import { AreaChart, BadgeDelta } from "@tremor/react";
@@ -18,16 +27,19 @@ import {
   ClipboardIcon,
   Contact2,
   DollarSign,
-  Link,
   ShoppingCart,
 } from "lucide-react";
+import Link from "next/link";
 import React from "react";
 
 type Props = {
   params: { subAccountId: string };
+  searchParams: {
+    code: string;
+  };
 };
 
-const SubAccountIdPage = async ({ params }: Props) => {
+const SubAccountIdPage = async ({ params, searchParams }: Props) => {
   let currency = "USD";
   let sessions;
   let totalClosedSessions;
@@ -59,17 +71,11 @@ const SubAccountIdPage = async ({ params }: Props) => {
         stripeAccount: subaccountDetails.connectAccountId,
       }
     );
-
-    console.log(checkoutSessions);
-
-    //modifying the sessions
     sessions = checkoutSessions.data.map((session) => ({
       ...session,
       created: new Date(session.created).toLocaleDateString(),
       amount_total: session.amount_total ? session.amount_total / 100 : 0,
     }));
-
-    console.log(sessions);
 
     totalClosedSessions = checkoutSessions.data
       .filter((session) => session.status === "complete")
@@ -78,8 +84,6 @@ const SubAccountIdPage = async ({ params }: Props) => {
         created: new Date(session.created).toLocaleDateString(),
         amount_total: session.amount_total ? session.amount_total / 100 : 0,
       }));
-
-    console.log(totalClosedSessions);
 
     totalPendingSessions = checkoutSessions.data
       .filter(
@@ -90,8 +94,6 @@ const SubAccountIdPage = async ({ params }: Props) => {
         created: new Date(session.created).toLocaleDateString(),
         amount_total: session.amount_total ? session.amount_total / 100 : 0,
       }));
-
-    console.log(totalPendingSessions);
 
     net = +totalClosedSessions
       .reduce((total, session) => total + (session.amount_total || 0), 0)
@@ -181,6 +183,7 @@ const SubAccountIdPage = async ({ params }: Props) => {
               <Contact2 className="absolute right-4 top-4 text-muted-foreground" />
             </Card>
             <PipelineValue subaccountId={params.subAccountId} />
+
             <Card className="xl:w-fit">
               <CardHeader>
                 <CardDescription>Conversions</CardDescription>
@@ -237,12 +240,11 @@ const SubAccountIdPage = async ({ params }: Props) => {
                 index="created"
                 categories={["amount_total"]}
                 colors={["primary"]}
-                yAxisWidth={50}
+                yAxisWidth={30}
                 showAnimation={true}
               />
             </Card>
           </div>
-
           <div className="flex gap-4 xl:!flex-row flex-col">
             <Card className="p-4 flex-1 h-[450px] overflow-scroll relative">
               <CardHeader>

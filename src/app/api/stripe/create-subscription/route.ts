@@ -18,6 +18,8 @@ export async function POST(req:Request){
         }
     })
 
+    // console.log(subscriptionExists);
+
     try {
         if (subscriptionExists?.Subscription?.subscriptionId && subscriptionExists.Subscription.active) {
             if (!subscriptionExists?.Subscription?.subscriptionId) {
@@ -28,6 +30,8 @@ export async function POST(req:Request){
             console.log("updating subscription")
 
             const currentSubscriptionDetails = await stripe.subscriptions.retrieve(subscriptionExists.Subscription.subscriptionId)
+
+            console.log(currentSubscriptionDetails);
 
             const subscription = await stripe.subscriptions.update(subscriptionExists.Subscription.subscriptionId, {
                 items: [
@@ -51,7 +55,7 @@ export async function POST(req:Request){
 
         }
         else {
-            console.log('creating subscription')
+            // console.log('creating subscription')
 
             const subscription = await stripe.subscriptions.create({
                 customer: customerId,
