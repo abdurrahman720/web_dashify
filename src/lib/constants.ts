@@ -222,7 +222,8 @@ export type EditorBtns =
   | "__body"
   | "image"
   | null
-  | "3Col";
+  | "3Col"
+  | "con";
 
 export const defaultStyles: React.CSSProperties = {
   backgroundPosition: "center",
@@ -230,4 +231,5 @@ export const defaultStyles: React.CSSProperties = {
   backgroundRepeat: "no-repeat",
   textAlign: "left",
   opacity: "100%",
+  // overflow:"scroll"
 };

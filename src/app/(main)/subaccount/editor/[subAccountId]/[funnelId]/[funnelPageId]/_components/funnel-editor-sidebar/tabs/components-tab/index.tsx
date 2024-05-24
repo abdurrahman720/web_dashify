@@ -8,6 +8,7 @@ import VideoPlaceholder from "./video-placeholder";
 import ContactFormComponentPlaceholder from "./contact-form-placeholder";
 import CheckoutPlaceholder from "./checkout-placeholder";
 import LinkPlaceholder from "./link-placeholder";
+import ImagePlaceholder from "./image-placeholder";
 
 type Props = {};
 
@@ -59,7 +60,13 @@ const ComponentsTab = (props: Props) => {
      label: "Link",
      id: "link",
      group: "elements",
-   },
+     },
+   {
+     Component: <ImagePlaceholder />,
+     label: "Image",
+     id: 'image',
+     group:"elements"
+   }
  ];
 
   return (

@@ -1,33 +1,34 @@
 "use client";
-import { EditorElement, useEditor } from "@/app/providers/editor/editor-provider";
-import { Badge } from "@/components/ui/badge";
+import {
+  EditorElement,
+  useEditor,
+} from "@/app/providers/editor/editor-provider";
 import { EditorBtns } from "@/lib/constants";
-
-
 import clsx from "clsx";
-import { Trash } from "lucide-react";
-import Link from "next/link";
-
-import React, { useRef } from "react";
+import { Badge, Trash } from "lucide-react";
+import Image from "next/image";
+import React from "react";
 
 type Props = {
   element: EditorElement;
 };
 
-const LinkComponent = (props: Props) => {
-    const { dispatch, state } = useEditor();
+const ImageComponent = (props: Props) => {
+    const styles = props.element.styles;
     
-  
+    
+
+  const { state, dispatch } = useEditor();
 
   const handleDragStart = (e: React.DragEvent, element: EditorElement) => {
-    if (element.type === null || element.type === '__body') return;
-    
+    if (element.type === null || element.type === "__body") return;
+
     const stringElement = JSON.stringify(element);
 
     e.dataTransfer.setData("component", stringElement);
   };
 
-  const handleOnClickBody = (e: React.MouseEvent) => {
+  const handleOnClick = (e: React.MouseEvent) => {
     e.stopPropagation();
     dispatch({
       type: "CHANGE_CLICKED_ELEMENT",
@@ -36,8 +37,6 @@ const LinkComponent = (props: Props) => {
       },
     });
   };
-
-  const styles = props.element.styles;
 
   const handleDeleteElement = () => {
     dispatch({
@@ -51,13 +50,12 @@ const LinkComponent = (props: Props) => {
       style={styles}
       draggable
       onDragStart={(e) => handleDragStart(e, props.element)}
-      onClick={handleOnClickBody}
+      onClick={handleOnClick}
       className={clsx(
-        "p-[2px] w-full m-[5px] relative text-[16px] transition-all",
+        "p-[2px] w-full m-[5px] relative text-[16px] transition-all flex items-center justify-center",
         {
           "!border-blue-500":
             state.editor.selectedElement.id === props.element.id,
-
           "!border-solid": state.editor.selectedElement.id === props.element.id,
           "border-dashed border-[1px] border-slate-300": !state.editor.liveMode,
         }
@@ -69,34 +67,17 @@ const LinkComponent = (props: Props) => {
             {state.editor.selectedElement.name}
           </Badge>
         )}
-      {!Array.isArray(props.element.content) &&
-        (state.editor.previewMode || state.editor.liveMode) && (
-          <Link href={props.element.content.href || "#"}>
-            {props.element.content.innerText}
-          </Link>
-        )}
-      {!state.editor.previewMode && !state.editor.liveMode && (
-        <span
-          contentEditable={!state.editor.liveMode}
-          onBlur={(e) => {
-            const spanElement = e.target as HTMLSpanElement;
-            dispatch({
-              type: "UPDATE_ELEMENT",
-              payload: {
-                elementDetails: {
-                  ...props.element,
-                  content: {
-                    innerText: spanElement.innerText,
-                  },
-                },
-              },
-            });
-          }}
-        >
-          {!Array.isArray(props.element.content) &&
-            props.element.content.innerText}
-        </span>
+
+      {!Array.isArray(props.element.content) && (
+        <Image
+          src={props.element.content.src || ""}
+          // width={props.element.styles.width as number}
+          // height={props.element.styles.height as number}
+          fill
+          alt={props.element.name}
+        />
       )}
+
       {state.editor.selectedElement.id === props.element.id &&
         !state.editor.liveMode && (
           <div className="absolute bg-primary px-2.5 py-1 text-xs font-bold  -top-[25px] -right-[1px] rounded-none rounded-t-lg !text-white">
@@ -111,4 +92,4 @@ const LinkComponent = (props: Props) => {
   );
 };
 
-export default LinkComponent;
+export default ImageComponent;

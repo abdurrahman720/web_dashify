@@ -19,6 +19,7 @@ import {
 } from "@/components/ui/select";
 import { Slider } from "@/components/ui/slider";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import clsx from "clsx";
 import {
   AlignCenter,
   AlignHorizontalJustifyCenterIcon,
@@ -38,20 +39,38 @@ import React from "react";
 
 type Props = {};
 
+type StyleProperties = {
+  [key: string]: any;
+};
+
 const SettingsTab = (props: Props) => {
   const { state, dispatch } = useEditor();
 
+  // console.log(`${state.editor.selectedElement.styles.fontWeight}`);
+
   const handleOnChanges = (e: any) => {
     const styleSettings = e.target.id;
-    console.log("🚀 ~ handleOnChanges ~ styleSettings:", styleSettings);
+
+    // console.log(styleSettings);
+
     let value = e.target.value;
-    console.log("🚀 ~ handleOnChanges ~ value:", value);
-    const styleObject = {
+
+    // console.log(value);
+
+    let styleObject: StyleProperties = {
       [styleSettings]: value,
     };
-    console.log("🚀 ~ handleOnChanges ~ styleObject:", styleObject);
 
-    console.log({ ...state.editor.selectedElement });
+    if (value === "flex") {
+      styleObject = {
+        ...styleObject,
+        flexDirection: "row",
+      };
+    }
+
+    // console.log(styleObject);
+
+    // console.log({ ...state.editor.selectedElement });
 
     dispatch({
       type: "UPDATE_ELEMENT",
@@ -111,6 +130,30 @@ const SettingsTab = (props: Props) => {
                   placeholder="https:domain.example.com/pathname"
                   onChange={handleChangeCustomValues}
                   value={state.editor.selectedElement.content.href}
+                />
+              </div>
+            )}
+          {state.editor.selectedElement.type === "image" &&
+            !Array.isArray(state.editor.selectedElement.content) && (
+              <div className="flex flex-col gap-2">
+                <p className="text-muted-foreground">Image Src</p>
+                <Input
+                  id="src"
+                  placeholder="https://utfs.io/f/8125dc9c-5732-47c0-9feb-7f6b10311c61-eo9fdn.png"
+                  onChange={handleChangeCustomValues}
+                  value={state.editor.selectedElement.content.src}
+                />
+              </div>
+            )}
+          {state.editor.selectedElement.type === "video" &&
+            !Array.isArray(state.editor.selectedElement.content) && (
+              <div className="flex flex-col gap-2">
+                <p className="text-muted-foreground">Video Src</p>
+                <Input
+                  id="src"
+                  placeholder="https://www.youtube.com/video1"
+                  onChange={handleChangeCustomValues}
+                  value={state.editor.selectedElement.content.src}
                 />
               </div>
             )}
@@ -188,14 +231,21 @@ const SettingsTab = (props: Props) => {
                 onValueChange={(e) =>
                   handleOnChanges({
                     target: {
-                      id: "font-weight",
+                      id: "fontWeight",
                       value: e,
                     },
                   })
                 }
+                // defaultValue={`${state.editor.selectedElement.styles.fontWeight || null}`}
               >
                 <SelectTrigger className="w-[180px]">
-                  <SelectValue placeholder="Select a weight" />
+                  <SelectValue
+                    placeholder={`${
+                      state.editor.selectedElement.styles.fontWeight
+                        ? state.editor.selectedElement.styles.fontWeight
+                        : "Select a weight"
+                    }`}
+                  />
                 </SelectTrigger>
                 <SelectContent>
                   <SelectGroup>
@@ -233,41 +283,73 @@ const SettingsTab = (props: Props) => {
                     <Label className="text-muted-foreground">Height</Label>
                     <Input
                       id="height"
-                      placeholder="px"
+                      placeholder={
+                        state.editor.selectedElement.styles.height
+                          ? `${`${state.editor.selectedElement.styles.height}`}`
+                          : "px"
+                      }
+                      className={clsx("", {
+                        "placeholder:text-white":
+                          state.editor.selectedElement.styles.height,
+                      })}
                       onChange={handleOnChanges}
-                      value={state.editor.selectedElement.styles.height}
+                      // value={state.editor.selectedElement.styles.height}
                     />
                   </div>
                   <div>
                     <Label className="text-muted-foreground">Width</Label>
                     <Input
-                      placeholder="px"
                       id="width"
+                      placeholder={
+                        state.editor.selectedElement.styles.width
+                          ? `${`${state.editor.selectedElement.styles.width}`}`
+                          : "px"
+                      }
+                      className={clsx("", {
+                        "placeholder:text-white":
+                          state.editor.selectedElement.styles.width,
+                      })}
                       onChange={handleOnChanges}
-                      value={state.editor.selectedElement.styles.width}
+                      // value={state.editor.selectedElement.styles.width}
                     />
                   </div>
                 </div>
               </div>
-              <p>Margin px</p>
+              <p>Margin </p>
               <div className="flex gap-4 flex-col">
                 <div className="flex gap-4">
                   <div>
                     <Label className="text-muted-foreground">Top</Label>
                     <Input
                       id="marginTop"
-                      placeholder="px"
+                      placeholder={
+                        state.editor.selectedElement.styles.marginTop
+                          ? `${`${state.editor.selectedElement.styles.marginTop}`}`
+                          : "px"
+                      }
+                      className={clsx("", {
+                        "placeholder:text-white":
+                          state.editor.selectedElement.styles.marginTop,
+                      })}
                       onChange={handleOnChanges}
-                      value={state.editor.selectedElement.styles.marginTop}
+                      // value={state.editor.selectedElement.styles.marginTop}
                     />
                   </div>
                   <div>
                     <Label className="text-muted-foreground">Bottom</Label>
                     <Input
-                      placeholder="px"
+                      placeholder={
+                        state.editor.selectedElement.styles.marginBottom
+                          ? `${`${state.editor.selectedElement.styles.marginBottom}`}`
+                          : "px"
+                      }
+                      className={clsx("", {
+                        "placeholder:text-white":
+                          state.editor.selectedElement.styles.marginBottom,
+                      })}
                       id="marginBottom"
                       onChange={handleOnChanges}
-                      value={state.editor.selectedElement.styles.marginBottom}
+                      // value={state.editor.selectedElement.styles.marginBottom}
                     />
                   </div>
                 </div>
@@ -275,44 +357,76 @@ const SettingsTab = (props: Props) => {
                   <div>
                     <Label className="text-muted-foreground">Left</Label>
                     <Input
-                      placeholder="px"
+                      placeholder={
+                        state.editor.selectedElement.styles.marginLeft
+                          ? `${`${state.editor.selectedElement.styles.marginLeft}`}`
+                          : "px"
+                      }
+                      className={clsx("", {
+                        "placeholder:text-white":
+                          state.editor.selectedElement.styles.marginLeft,
+                      })}
                       id="marginLeft"
                       onChange={handleOnChanges}
-                      value={state.editor.selectedElement.styles.marginLeft}
+                      // value={state.editor.selectedElement.styles.marginLeft}
                     />
                   </div>
                   <div>
                     <Label className="text-muted-foreground">Right</Label>
                     <Input
-                      placeholder="px"
+                      placeholder={
+                        state.editor.selectedElement.styles.marginRight
+                          ? `${`${state.editor.selectedElement.styles.marginRight}`}`
+                          : "px"
+                      }
+                      className={clsx("", {
+                        "placeholder:text-white":
+                          state.editor.selectedElement.styles.marginRight,
+                      })}
                       id="marginRight"
                       onChange={handleOnChanges}
-                      value={state.editor.selectedElement.styles.marginRight}
+                      // value={state.editor.selectedElement.styles.marginRight ? state.editor.selectedElement.styles.marginRight : undefined }
                     />
                   </div>
                 </div>
               </div>
             </div>
             <div className="flex flex-col gap-2">
-              <p>Padding px</p>
+              <p>Padding</p>
               <div className="flex gap-4 flex-col">
                 <div className="flex gap-4">
                   <div>
                     <Label className="text-muted-foreground">Top</Label>
                     <Input
-                      placeholder="px"
+                      placeholder={
+                        state.editor.selectedElement.styles.paddingTop
+                          ? `${`${state.editor.selectedElement.styles.paddingTop}`}`
+                          : "px"
+                      }
+                      className={clsx("", {
+                        "placeholder:text-white":
+                          state.editor.selectedElement.styles.paddingTop,
+                      })}
                       id="paddingTop"
                       onChange={handleOnChanges}
-                      value={state.editor.selectedElement.styles.paddingTop}
+                      // value={state.editor.selectedElement.styles.paddingTop}
                     />
                   </div>
                   <div>
                     <Label className="text-muted-foreground">Bottom</Label>
                     <Input
-                      placeholder="px"
+                      placeholder={
+                        state.editor.selectedElement.styles.paddingBottom
+                          ? `${`${state.editor.selectedElement.styles.paddingBottom}`}`
+                          : "px"
+                      }
+                      className={clsx("", {
+                        "placeholder:text-white":
+                          state.editor.selectedElement.styles.paddingBottom,
+                      })}
                       id="paddingBottom"
                       onChange={handleOnChanges}
-                      value={state.editor.selectedElement.styles.paddingBottom}
+                      // value={state.editor.selectedElement.styles.paddingBottom}
                     />
                   </div>
                 </div>
@@ -320,19 +434,36 @@ const SettingsTab = (props: Props) => {
                   <div>
                     <Label className="text-muted-foreground">Left</Label>
                     <Input
-                      placeholder="px"
+                      placeholder={
+                        state.editor.selectedElement.styles.paddingLeft
+                          ? `${`${state.editor.selectedElement.styles.paddingLeft}`}`
+                          : "px"
+                      }
+                      className={clsx("", {
+                        "placeholder:text-white":
+                          state.editor.selectedElement.styles.paddingLeft,
+                      })}
                       id="paddingLeft"
                       onChange={handleOnChanges}
-                      value={state.editor.selectedElement.styles.paddingLeft}
+
+                      // value={state.editor.selectedElement.styles.paddingLeft}
                     />
                   </div>
                   <div>
                     <Label className="text-muted-foreground">Right</Label>
                     <Input
-                      placeholder="px"
+                      placeholder={
+                        state.editor.selectedElement.styles.paddingRight
+                          ? `${`${state.editor.selectedElement.styles.paddingRight}`}`
+                          : "px"
+                      }
                       id="paddingRight"
                       onChange={handleOnChanges}
-                      value={state.editor.selectedElement.styles.paddingRight}
+                      className={clsx("", {
+                        "placeholder:text-white":
+                          state.editor.selectedElement.styles.paddingRight,
+                      })}
+                      // value={state.editor.selectedElement.styles.paddingRight}
                     />
                   </div>
                 </div>
@@ -586,16 +717,17 @@ const SettingsTab = (props: Props) => {
                   },
                 });
               }}
+              checked={state.editor.selectedElement.styles.display === "flex"}
             />
             <Label className="text-muted-foreground">Flex</Label>
           </div>
           <div>
             <Label className="text-muted-foreground"> Direction</Label>
             <Input
-              placeholder="px"
+              placeholder={`${state.editor.selectedElement.styles.flexDirection}`}
               id="flexDirection"
               onChange={handleOnChanges}
-              value={state.editor.selectedElement.styles.flexDirection}
+              // value={state.editor.selectedElement.styles.flexDirection}
             />
           </div>
         </AccordionContent>

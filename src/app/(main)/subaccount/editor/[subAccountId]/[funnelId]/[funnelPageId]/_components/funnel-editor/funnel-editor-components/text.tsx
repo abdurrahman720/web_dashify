@@ -4,6 +4,7 @@ import {
   useEditor,
 } from "@/app/providers/editor/editor-provider";
 import { Badge } from "@/components/ui/badge";
+import { EditorBtns } from "@/lib/constants";
 import clsx from "clsx";
 import { Trash } from "lucide-react";
 import React from "react";
@@ -22,6 +23,14 @@ const TextComponent = (props: Props) => {
     });
   };
 
+  const handleDragStart = (e: React.DragEvent, element: EditorElement) => {
+    if (element.type === null || element.type === "__body") return;
+
+    const stringElement = JSON.stringify(element);
+
+    e.dataTransfer.setData("component", stringElement);
+  };
+
   const styles = props.element.styles;
 
   const handleOnClickBody = (e: React.MouseEvent) => {
@@ -34,10 +43,15 @@ const TextComponent = (props: Props) => {
     });
   };
 
+  // console.log(props.element);
+
   return (
     <div
       draggable
       style={styles}
+      onDragStart={(e) => {
+        handleDragStart(e,props.element);
+      }}
       className={clsx(
         "p-[2px] w-full m-[5px] relative text-[16px] transition-all",
         {

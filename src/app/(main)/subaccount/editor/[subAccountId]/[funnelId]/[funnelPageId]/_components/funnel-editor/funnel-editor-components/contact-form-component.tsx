@@ -27,10 +27,14 @@ const ContactFormComponent = (props: Props) => {
   const { dispatch, state, subaccountId, funnelId, pageDetails } = useEditor();
   const router = useRouter();
 
-  const handleDragStart = (e: React.DragEvent, type: EditorBtns) => {
-    if (type === null) return;
-    e.dataTransfer.setData("componentType", type);
+  const handleDragStart = (e: React.DragEvent, element: EditorElement) => {
+    if (element.type === null || element.type === "__body") return;
+
+    const stringElement = JSON.stringify(element);
+
+    e.dataTransfer.setData("component", stringElement);
   };
+
 
   const handleOnClickBody = (e: React.MouseEvent) => {
     e.stopPropagation();
@@ -96,11 +100,17 @@ const ContactFormComponent = (props: Props) => {
     }
   };
 
+    const handleDragOver = (e: React.DragEvent) => {
+      e.preventDefault();
+    };
+
+
   return (
     <div
       style={styles}
       draggable
-      onDragStart={(e) => handleDragStart(e, "contactForm")}
+      onDragStart={(e) => handleDragStart(e, props.element)}
+      onDragOver={handleDragOver}
       onClick={handleOnClickBody}
       className={clsx(
         "p-[2px] w-full m-[5px] relative text-[16px] transition-all flex items-center justify-center",

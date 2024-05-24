@@ -18,14 +18,42 @@ type Props = {
 const Container = ({ element }: Props) => {
   const { id, content, name, styles, type } = element;
 
+  // console.log(styles)
+  // console.log(content)
+  // console.log(type)
+  // console.log(name)
+
   const { dispatch, state } = useEditor();
 
-
-
-  const handleOnDrop = (e: React.DragEvent, type: string) => {
+  const handleOnDrop = (e: React.DragEvent, id: string) => {
     e.stopPropagation();
 
     const componentType = e.dataTransfer.getData("componentType") as EditorBtns;
+
+    console.log(componentType)
+
+    const componentString = e.dataTransfer.getData("component") || "{}";
+
+
+    const component: EditorElement = JSON.parse(componentString);
+
+   
+
+    if (component.id) {
+      dispatch({
+        type: "ADD_ELEMENT",
+        payload: {
+          containerId: id,
+          elementDetails: {
+            content: component.content,
+            id: v4(),
+            name: component.name,
+            styles: component.styles,
+            type: component.type,
+          },
+        },
+      });
+    }
 
     switch (componentType) {
       case "text":
@@ -38,7 +66,7 @@ const Container = ({ element }: Props) => {
               id: v4(),
               name: "Text",
               styles: {
-                color: "black",
+                color: styles?.backgroundColor === "white" ? "black" : "white",
                 ...defaultStyles,
               },
               type: "text",
@@ -84,6 +112,23 @@ const Container = ({ element }: Props) => {
           },
         });
         break;
+      case "image":
+        dispatch({
+          type: "ADD_ELEMENT",
+          payload: {
+            containerId: id,
+            elementDetails: {
+              content: {
+                src: "https://utfs.io/f/8125dc9c-5732-47c0-9feb-7f6b10311c61-eo9fdn.png",
+              },
+              id: v4(),
+              name: "Image",
+              styles: { position: "relative", width: "100px", height: "100px" },
+              type: "image",
+            },
+          },
+        });
+        break;
       case "container":
         dispatch({
           type: "ADD_ELEMENT",
@@ -99,6 +144,7 @@ const Container = ({ element }: Props) => {
           },
         });
         break;
+
       case "contactForm":
         dispatch({
           type: "ADD_ELEMENT",
@@ -199,7 +245,8 @@ const Container = ({ element }: Props) => {
         "max-w-full w-full": type === "container" || type === "2Col",
         "h-fit": type === "container",
         "h-full": type === "__body",
-        "overflow-scroll ": type === "__body",
+        "overflow-scroll ": type === "__body" ,
+        // "pb-36": type === "__body" && !state.editor.liveMode,
         "flex flex-col md:!flex-row": type === "2Col",
         "!border-blue-500":
           state.editor.selectedElement.id === id &&
@@ -217,11 +264,11 @@ const Container = ({ element }: Props) => {
       onDrop={(e) => handleOnDrop(e, id)}
       onClick={handleOnClickBody}
       onDragOver={handleDragOver}
-      onDragStart={(e) => handleDragStart(e, "container")}
+      // onDragStart={(e) => handleDragStart(e, "con")}
     >
       <Badge
         className={clsx(
-          "absolute -top-[23px] -left-[1px] rounded-none rounded-t-lg hidden",
+          "absolute -top-[5px] -left-[1px] rounded-none rounded-t-lg hidden",
           {
             block:
               state.editor.selectedElement.id === element.id &&
@@ -240,7 +287,7 @@ const Container = ({ element }: Props) => {
       {state.editor.selectedElement.id === element.id &&
         !state.editor.liveMode &&
         state.editor.selectedElement.type !== "__body" && (
-          <div className="absolute bg-primary px-2.5 py-1 text-xs font-bold  -top-[25px] -right-[1px] rounded-none rounded-t-lg ">
+          <div className="absolute bg-primary px-2.5 py-1 text-xs font-bold  -top-[5px] -right-[1px] rounded-none rounded-t-lg ">
             <Trash size={16} onClick={handleDeleteElement} />
           </div>
         )}

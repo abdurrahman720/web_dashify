@@ -6,8 +6,13 @@ type Props = {};
 
 const TextPlaceholder = (props: Props) => {
   const handleDragState = (e: React.DragEvent, type: EditorBtns) => {
+    console.log(type);
     if (type === null) return;
     e.dataTransfer.setData("componentType", type);
+
+    const componentType = e.dataTransfer.getData("componentType") as EditorBtns;
+
+    console.log(componentType);
   };
 
   return (

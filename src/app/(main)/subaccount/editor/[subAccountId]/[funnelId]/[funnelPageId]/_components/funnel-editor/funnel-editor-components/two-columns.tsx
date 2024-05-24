@@ -78,9 +78,9 @@ const TwoColumns = (props: Props) => {
   const handleDragOver = (e: React.DragEvent) => {
     e.preventDefault();
   };
-  const handleDragStart = (e: React.DragEvent, type: string) => {
+  const handleDragStart = (e: React.DragEvent, type: EditorBtns) => {
     if (type === "__body") return;
-    e.dataTransfer.setData("componentType", type);
+    e.dataTransfer.setData("componentType", type as any);
   };
 
   const handleOnClickBody = (e: React.MouseEvent) => {
@@ -113,7 +113,7 @@ const TwoColumns = (props: Props) => {
       onDragOver={handleDragOver}
       draggable={type !== "__body"}
       onClick={handleOnClickBody}
-      onDragStart={(e) => handleDragStart(e, "container")}
+      onDragStart={(e) => handleDragStart(e, "2Col")}
     >
       {state.editor.selectedElement.id === props.element.id &&
         !state.editor.liveMode && (

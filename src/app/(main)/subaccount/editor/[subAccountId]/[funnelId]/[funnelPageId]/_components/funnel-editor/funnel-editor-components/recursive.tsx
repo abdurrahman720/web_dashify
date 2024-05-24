@@ -8,6 +8,7 @@ import LinkComponent from "./link-component";
 import TwoColumns from "./two-columns";
 import ContactFormComponent from "./contact-form-component";
 import Checkout from "./checkout";
+import ImageComponent from "./image";
 
 type Props = {
   element: EditorElement;
@@ -30,9 +31,10 @@ const Recursive = ({ element }: Props) => {
       return <Container element={element} />;
     case "__body":
       return <Container element={element} />;
-
     case "link":
       return <LinkComponent element={element} />;
+    case "image":
+      return <ImageComponent element={element} />
     default:
       return null;
   }

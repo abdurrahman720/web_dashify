@@ -1,6 +1,7 @@
 "use client";
 
 import { DeviceTypes, useEditor } from "@/app/providers/editor/editor-provider";
+import Loading from "@/components/global/loading";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Switch } from "@/components/ui/switch";
@@ -18,7 +19,7 @@ import clsx from "clsx";
 import { ArrowLeftCircle, EyeIcon, Laptop, Redo2, Smartphone, Tablet, Undo2 } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { FocusEventHandler, useEffect } from "react";
+import { FocusEventHandler, useEffect, useState } from "react";
 import { toast } from "sonner";
 
 type Props = {
@@ -35,6 +36,8 @@ const FunnelEditorNavigation = ({
   const router = useRouter();
 
   const { state, dispatch } = useEditor();
+
+    const [isLoading, setIsLoading] = useState(false)
 
   useEffect(() => {
     dispatch({
@@ -87,6 +90,7 @@ const FunnelEditorNavigation = ({
       const handleOnSave = async () => {
         const content = JSON.stringify(state.editor.elements);
         try {
+          setIsLoading(true)
           const response = await upsertFunnelPage(
             subaccountId,
             {
@@ -107,6 +111,9 @@ const FunnelEditorNavigation = ({
           toast("Oppse!", {
             description: "Could not save editor",
           });
+        }
+        finally {
+           setIsLoading(false);
         }
       };
     
@@ -224,11 +231,18 @@ const FunnelEditorNavigation = ({
               <Switch disabled defaultChecked={true} />
               Publish
             </div>
-            <span   className="text-muted-foreground text-sm">
+            <span className="text-muted-foreground text-sm">
               Last updated {funnelPageDetails.updatedAt.toLocaleDateString()}
             </span>
           </div>
-          <Button onClick={handleOnSave}>Save</Button>
+          <Button
+            type="button"
+            disabled={isLoading}
+            className="disabled:opacity-70"
+            onClick={handleOnSave}
+          >
+            {isLoading ? <Loading /> : "Save"}
+          </Button>
         </aside>
       </nav>
     </TooltipProvider>

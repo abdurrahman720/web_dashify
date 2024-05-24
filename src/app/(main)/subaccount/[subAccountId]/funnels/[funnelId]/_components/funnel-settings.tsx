@@ -33,9 +33,13 @@ const FunnelSettings: React.FC<FunnelSettingsProps> = async ({
   });
 
   if (!subaccountDetails) return;
-  if (!subaccountDetails.connectAccountId) return;
+
+
+  // if (!subaccountDetails.connectAccountId) return <p className="text-3xl text-destructive">Connect your stripe account to sell products.</p>;
+
+
   const products = await getConnectAccountProducts(
-    subaccountDetails.connectAccountId
+    subaccountDetails.connectAccountId as string
   );
 
   
