@@ -85,6 +85,41 @@ const SubAccountIdPage = async ({ params, searchParams }: Props) => {
         amount_total: session.amount_total ? session.amount_total / 100 : 0,
       }));
 
+    //NOTE:Tweak
+
+    // totalClosedSessions = [
+    //   { created: "01/01/2024", amount_total: 4500 },
+    //   { created: "01/02/2024", amount_total: 5200 },
+    //   { created: "01/03/2024", amount_total: 4700 },
+    //   { created: "01/04/2024", amount_total: 5500 },
+    //   { created: "01/05/2024", amount_total: 0 },
+    //   { created: "01/06/2024", amount_total: 0 },
+    //   { created: "01/07/2024", amount_total: 5100 },
+    //   { created: "01/08/2024", amount_total: 4800 },
+    //   { created: "01/09/2024", amount_total: 5600 },
+    //   { created: "01/10/2024", amount_total: 5000 },
+    //   { created: "01/11/2024", amount_total: 4950 },
+    //   { created: "01/12/2024", amount_total: 5150 },
+    //   { created: "01/13/2024", amount_total: 5300 },
+    //   { created: "01/14/2024", amount_total: 0 },
+    //   { created: "01/15/2024", amount_total: 0 },
+    //   { created: "01/16/2024", amount_total: 5200 },
+    //   { created: "01/17/2024", amount_total: 5050 },
+    //   { created: "01/18/2024", amount_total: 4900 },
+    //   { created: "01/19/2024", amount_total: 5100 },
+    //   { created: "01/20/2024", amount_total: 5400 },
+    //   { created: "01/21/2024", amount_total: 4750 },
+    //   { created: "01/22/2024", amount_total: 5250 },
+    //   { created: "01/23/2024", amount_total: 5150 },
+    //   { created: "01/24/2024", amount_total: 4950 },
+    //   { created: "01/25/2024", amount_total: 4850 },
+    //   { created: "01/26/2024", amount_total: 5300 },
+    //   { created: "01/27/2024", amount_total: 0 },
+    //   { created: "01/28/2024", amount_total: 5000 },
+    //   { created: "01/29/2024", amount_total: 5500 },
+    //   { created: "01/30/2024", amount_total: 5050 },
+    // ];
+
     totalPendingSessions = checkoutSessions.data
       .filter(
         (session) => session.status === "open" || session.status === "expired"
@@ -95,19 +130,62 @@ const SubAccountIdPage = async ({ params, searchParams }: Props) => {
         amount_total: session.amount_total ? session.amount_total / 100 : 0,
       }));
 
+    //NOTE:Tweak
+
+    // totalPendingSessions = [
+    //   { created: "02/01/2024", amount_total: 30000 },
+    //   { created: "02/02/2024", amount_total: 32000 },
+    //   { created: "02/03/2024", amount_total: 31000 },
+    //   { created: "02/04/2024", amount_total: 33000 },
+    //   { created: "02/05/2024", amount_total: 30500 },
+    //   { created: "02/06/2024", amount_total: 31500 },
+    //   { created: "02/07/2024", amount_total: 32500 },
+    //   { created: "02/08/2024", amount_total: 30000 },
+    //   { created: "02/09/2024", amount_total: 31000 },
+    //   { created: "02/10/2024", amount_total: 33500 },
+    //   { created: "02/11/2024", amount_total: 30500 },
+    //   { created: "02/12/2024", amount_total: 32000 },
+    //   { created: "02/13/2024", amount_total: 31500 },
+    //   { created: "02/14/2024", amount_total: 33000 },
+    //   { created: "02/15/2024", amount_total: 31000 },
+    //   { created: "02/16/2024", amount_total: 30000 },
+    //   { created: "02/17/2024", amount_total: 33500 },
+    //   { created: "02/18/2024", amount_total: 32500 },
+    //   { created: "02/19/2024", amount_total: 31000 },
+    //   { created: "02/20/2024", amount_total: 32000 },
+    //   { created: "02/21/2024", amount_total: 30000 },
+    //   { created: "02/22/2024", amount_total: 31000 },
+    //   { created: "02/23/2024", amount_total: 33000 },
+    //   { created: "02/24/2024", amount_total: 31500 },
+    //   { created: "02/25/2024", amount_total: 30500 },
+    //   { created: "02/26/2024", amount_total: 32500 },
+    //   { created: "02/27/2024", amount_total: 30000 },
+    //   { created: "02/28/2024", amount_total: 33500 },
+    //   { created: "02/29/2024", amount_total: 32000 },
+    // ];
+
     net = +totalClosedSessions
       .reduce((total, session) => total + (session.amount_total || 0), 0)
       .toFixed(2);
 
     potentialIncome = +totalPendingSessions
-      .reduce((total, session) => total + (session.amount_total || 0), 0)
+      .reduce((total, session) => total + (session.amount_total || 0) , 0)
       .toFixed(2);
 
     closingRate = +(
       (totalClosedSessions.length / checkoutSessions.data.length) *
       100
     ).toFixed(2);
+
+    // closingRate = 75;
   }
+
+  //TODO: needs to be removed
+  //   closingRate = +(
+  //     (totalClosedSessions.length / sessions.length) *
+  //     100
+  //   ).toFixed(2);
+  // }
 
   const funnels = await db.funnel.findMany({
     where: {
@@ -240,7 +318,7 @@ const SubAccountIdPage = async ({ params, searchParams }: Props) => {
                 index="created"
                 categories={["amount_total"]}
                 colors={["primary"]}
-                yAxisWidth={30}
+                yAxisWidth={50}
                 showAnimation={true}
               />
             </Card>
@@ -274,6 +352,7 @@ const SubAccountIdPage = async ({ params, searchParams }: Props) => {
                           <TableRow key={session.id}>
                             <TableCell>
                               {session.customer_details?.email || "-"}
+                              {/* {"jacob@gmail.com"} */}
                             </TableCell>
                             <TableCell>
                               <Badge className="bg-emerald-500 dark:text-black">

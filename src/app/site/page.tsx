@@ -46,7 +46,7 @@ export default async function Home() {
         </div>
         <div className="flex justify-center items-center relative ">
           <Image
-            src={"/assets/preview.png"}
+            src={"/assets/preview_wdfy.png"}
             alt="banner image"
             height={1200}
             width={1200}
@@ -141,7 +141,9 @@ export default async function Home() {
               </div>
               <Link
                 href={`/agency`}
-                className={clsx("w-full text-center bg-muted-foreground p-2 rounded-md")}
+                className={clsx(
+                  "w-full text-center bg-muted-foreground p-2 rounded-md"
+                )}
               >
                 Get Started
               </Link>

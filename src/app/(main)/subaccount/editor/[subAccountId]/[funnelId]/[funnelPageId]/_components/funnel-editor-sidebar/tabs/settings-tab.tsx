@@ -89,12 +89,12 @@ const SettingsTab = (props: Props) => {
   const handleChangeCustomValues = (e: any) => {
     const settingProperty = e.target.id;
     let value = e.target.value;
-    console.log("🚀 ~ handleChangeCustomValues ~ value:", value);
+    console.log( value);
     const styleObject = {
       [settingProperty]: value,
     };
 
-    console.log("🚀 ~ handleChangeCustomValues ~ styleObject:", styleObject);
+  
 
     console.log({ ...state.editor.selectedElement });
 
@@ -139,7 +139,7 @@ const SettingsTab = (props: Props) => {
                 <p className="text-muted-foreground">Image Src</p>
                 <Input
                   id="src"
-                  placeholder="https://utfs.io/f/8125dc9c-5732-47c0-9feb-7f6b10311c61-eo9fdn.png"
+                  placeholder="https://utfs.io/f/24ae825b-2b35-4c3b-afa4-1d0d0cdf9308-cehxha.jpg"
                   onChange={handleChangeCustomValues}
                   value={state.editor.selectedElement.content.src}
                 />
@@ -151,7 +151,7 @@ const SettingsTab = (props: Props) => {
                 <p className="text-muted-foreground">Video Src</p>
                 <Input
                   id="src"
-                  placeholder="https://www.youtube.com/video1"
+                  placeholder="https://www.youtube.com/embed/vlGzylNZGj4?si=RARjFOrG6_nhFe_u"
                   onChange={handleChangeCustomValues}
                   value={state.editor.selectedElement.content.src}
                 />

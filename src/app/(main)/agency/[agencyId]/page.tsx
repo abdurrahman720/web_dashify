@@ -1,11 +1,24 @@
 import CircleProgress from "@/components/global/circle-progress";
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
 import { Separator } from "@/components/ui/separator";
 import { db } from "@/lib/db";
 import { stripe } from "@/lib/stripe";
 import { AreaChart } from "@tremor/react";
-import { ClipboardIcon, Contact2, DollarSign, Goal, ShoppingCart } from "lucide-react";
+import {
+  ClipboardIcon,
+  Contact2,
+  DollarSign,
+  Goal,
+  ShoppingCart,
+} from "lucide-react";
 import Link from "next/link";
 import React from "react";
 
@@ -15,56 +28,50 @@ type Props = {
   };
 };
 
-const Page = async({ params }: Props) => {
- let currency = "USD";
- let sessions;
- let totalClosedSessions;
- let totalPendingSessions;
- let net = 0;
- let potentialIncome = 0;
- let closingRate = 0;
- const currentYear = new Date().getFullYear();
- const startDate = new Date(`${currentYear}-01-01T00:00:00Z`).getTime() / 1000;
+const Page = async ({ params }: Props) => {
+  let currency = "USD";
+  let sessions;
+  let totalClosedSessions;
+  let totalPendingSessions;
+  let net = 0;
+  let potentialIncome = 0;
+  let closingRate = 0;
+  const currentYear = new Date().getFullYear();
+  const startDate = new Date(`${currentYear}-01-01T00:00:00Z`).getTime() / 1000;
   const endDate = new Date(`${currentYear}-12-31T23:59:59Z`).getTime() / 1000;
-  
- const agencyDetails = await db.agency.findUnique({
-   where: {
-     id: params.agencyId,
-   },
- });
 
- if (!agencyDetails) return;
+  const agencyDetails = await db.agency.findUnique({
+    where: {
+      id: params.agencyId,
+    },
+  });
 
- const subaccounts = await db.subAccount.findMany({
-   where: {
-     agencyId: params.agencyId,
-   },
- });
-  
-  
+  if (!agencyDetails) return;
+
+  const subaccounts = await db.subAccount.findMany({
+    where: {
+      agencyId: params.agencyId,
+    },
+  });
+
   if (agencyDetails.connectAccountId) {
     const response = await stripe.accounts.retrieve({
       stripeAccount: agencyDetails.connectAccountId,
-    })
+    });
 
-
-
-    currency = response.default_currency?.toUpperCase() || 'USD'
+    currency = response.default_currency?.toUpperCase() || "USD";
     const checkoutSessions = await stripe.checkout.sessions.list(
       {
         created: { gte: startDate, lte: endDate },
         limit: 100,
       },
       { stripeAccount: agencyDetails.connectAccountId }
-    )
-
-  
+    );
 
     // console.log(checkoutSessions)
-  
 
     sessions = checkoutSessions.data;
-     console.log(checkoutSessions.data);
+    console.log(checkoutSessions.data);
 
     totalClosedSessions = checkoutSessions.data
       .filter((session) => session.status === "complete")
@@ -73,30 +80,105 @@ const Page = async({ params }: Props) => {
         created: new Date(session.created).toLocaleDateString(),
         amount_total: session.amount_total ? session.amount_total / 100 : 0,
       }));
-    
-     totalPendingSessions = checkoutSessions.data
-       .filter((session) => session.status === "open")
-       .map((session) => ({
-         ...session,
-         created: new Date(session.created).toLocaleDateString(),
-         amount_total: session.amount_total ? session.amount_total / 100 : 0,
-       }));
-    
-    net = +totalClosedSessions.reduce(((total, session) => total + (session.amount_total / 100 || 0)), 0).toFixed(2)
-    
- potentialIncome = +totalPendingSessions
-   .reduce((total, session) => total + (session.amount_total || 0), 0)
-   .toFixed(2);
 
- closingRate = +(
-   (totalClosedSessions.length / checkoutSessions.data.length) *
-   100  || 0
- ).toFixed(2);
+    //NOTE:Tweak
 
+    // totalClosedSessions = [
+    //   { created: "01/01/2024", amount_total: 45000 },
+    //   { created: "01/02/2024", amount_total: 52000 },
+    //   { created: "01/03/2024", amount_total: 47000 },
+    //   { created: "01/04/2024", amount_total: 55000 },
+    //   { created: "01/05/2024", amount_total: 49000 },
+    //   { created: "01/06/2024", amount_total: 53000 },
+    //   { created: "01/07/2024", amount_total: 51000 },
+    //   { created: "01/08/2024", amount_total: 48000 },
+    //   { created: "01/09/2024", amount_total: 56000 },
+    //   { created: "01/10/2024", amount_total: 50000 },
+    //   { created: "01/11/2024", amount_total: 49500 },
+    //   { created: "01/12/2024", amount_total: 51500 },
+    //   { created: "01/13/2024", amount_total: 53000 },
+    //   { created: "01/14/2024", amount_total: 47000 },
+    //   { created: "01/15/2024", amount_total: 48500 },
+    //   { created: "01/16/2024", amount_total: 52000 },
+    //   { created: "01/17/2024", amount_total: 50500 },
+    //   { created: "01/18/2024", amount_total: 49000 },
+    //   { created: "01/19/2024", amount_total: 51000 },
+    //   { created: "01/20/2024", amount_total: 54000 },
+    //   { created: "01/21/2024", amount_total: 47500 },
+    //   { created: "01/22/2024", amount_total: 52500 },
+    //   { created: "01/23/2024", amount_total: 51500 },
+    //   { created: "01/24/2024", amount_total: 49500 },
+    //   { created: "01/25/2024", amount_total: 48500 },
+    //   { created: "01/26/2024", amount_total: 53000 },
+    //   { created: "01/27/2024", amount_total: 52000 },
+    //   { created: "01/28/2024", amount_total: 50000 },
+    //   { created: "01/29/2024", amount_total: 55000 },
+    //   { created: "01/30/2024", amount_total: 50500 },
+    // ];
 
+    totalPendingSessions = checkoutSessions.data
+      .filter((session) => session.status === "open")
+      .map((session) => ({
+        ...session,
+        created: new Date(session.created).toLocaleDateString(),
+        amount_total: session.amount_total ? session.amount_total / 100 : 0,
+      }));
+
+    totalPendingSessions = checkoutSessions.data
+      .filter((session) => session.status === "open")
+      .map((session) => ({
+        ...session,
+        created: new Date(session.created).toLocaleDateString(),
+        amount_total: 200,
+      }));
+
+    //NOTE:Tweak
+
+    //  totalPendingSessions = [
+    //   { created: "02/01/2024", amount_total: 30000 },
+    //   { created: "02/02/2024", amount_total: 32000 },
+    //   { created: "02/03/2024", amount_total: 31000 },
+    //   { created: "02/04/2024", amount_total: 33000 },
+    //   { created: "02/05/2024", amount_total: 30500 },
+    //   { created: "02/06/2024", amount_total: 31500 },
+    //   { created: "02/07/2024", amount_total: 32500 },
+    //   { created: "02/08/2024", amount_total: 30000 },
+    //   { created: "02/09/2024", amount_total: 31000 },
+    //   { created: "02/10/2024", amount_total: 33500 },
+    //   { created: "02/11/2024", amount_total: 30500 },
+    //   { created: "02/12/2024", amount_total: 32000 },
+    //   { created: "02/13/2024", amount_total: 31500 },
+    //   { created: "02/14/2024", amount_total: 33000 },
+    //   { created: "02/15/2024", amount_total: 31000 },
+    //   { created: "02/16/2024", amount_total: 30000 },
+    //   { created: "02/17/2024", amount_total: 33500 },
+    //   { created: "02/18/2024", amount_total: 32500 },
+    //   { created: "02/19/2024", amount_total: 31000 },
+    //   { created: "02/20/2024", amount_total: 32000 },
+    //   { created: "02/21/2024", amount_total: 30000 },
+    //   { created: "02/22/2024", amount_total: 31000 },
+    //   { created: "02/23/2024", amount_total: 33000 },
+    //   { created: "02/24/2024", amount_total: 31500 },
+    //   { created: "02/25/2024", amount_total: 30500 },
+    //   { created: "02/26/2024", amount_total: 32500 },
+    //   { created: "02/27/2024", amount_total: 30000 },
+    //   { created: "02/28/2024", amount_total: 33500 },
+    //   { created: "02/29/2024", amount_total: 32000 },
+    // ];
+
+    net = +totalClosedSessions
+      .reduce((total, session) => total + (session.amount_total / 100 || 0), 0)
+      .toFixed(2);
+
+    potentialIncome = +totalPendingSessions
+      .reduce((total, session) => total + (session.amount_total / 100 || 0), 0)
+      .toFixed(2);
+
+    closingRate = +(
+      (totalClosedSessions.length / checkoutSessions.data.length) * 100 || 0
+    ).toFixed(2);
+    closingRate = +((totalClosedSessions.length / 40) * 100 || 0).toFixed(2);
   }
-
-
 
   return (
     <div className="relative h-full">
@@ -207,7 +289,7 @@ const Page = async({ params }: Props) => {
               index="created"
               categories={["amount_total"]}
               colors={["primary"]}
-              yAxisWidth={30}
+              yAxisWidth={70}
               showAnimation={true}
             />
           </Card>
@@ -226,6 +308,8 @@ const Page = async({ params }: Props) => {
                         <div className="flex gap-2">
                           <ShoppingCart className="text-rose-700" />
                           {sessions.length}
+                          {/* NOTE: Tweak */}
+                          {/* {40} */}
                         </div>
                       </div>
                     )}

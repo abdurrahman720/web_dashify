@@ -3,9 +3,10 @@
 import { getPipelines } from "@/lib/queries";
 import { Prisma } from "@prisma/client";
 import { useEffect, useMemo, useState } from "react";
-import { Card, CardContent, CardDescription, CardHeader } from "../ui/card";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "../ui/card";
 import { Progress } from "../ui/progress";
 import { Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectTrigger, SelectValue } from "../ui/select";
+import { DollarSign, Flag } from "lucide-react";
 
 type Props = {
   subaccountId: string;
@@ -59,6 +60,10 @@ const PipelineValue = ({ subaccountId }: Props) => {
     <Card className="relative w-full xl:w-[350px]">
       <CardHeader>
         <CardDescription>Pipeline Value</CardDescription>
+        <Flag className="absolute right-4 top-4 text-muted-foreground" />
+        <CardTitle className="text-4xl">
+          {totalPipelineValue ? `$ ${totalPipelineValue.toFixed(2)}` : `$0.00`}
+        </CardTitle>
         <small className="text-xs text-muted-foreground">
           Pipeline Progress
         </small>

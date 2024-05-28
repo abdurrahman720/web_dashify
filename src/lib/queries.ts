@@ -519,19 +519,19 @@ export const sendInvitation = async (
     data: { email, agencyId, role },
   });
 
-  try {
-    const invitation = await clerkClient.invitations.createInvitation({
-      emailAddress: email,
-      redirectUrl: process.env.NEXT_PUBLIC_URL,
-      publicMetadata: {
-        throughInvitation: true,
-        role,
-      },
-    });
-  } catch (error) {
-    console.log(error);
-    throw error;
-  }
+  // try {
+  //   const invitation = await clerkClient.invitations.createInvitation({
+  //     emailAddress: email,
+  //     redirectUrl: process.env.NEXT_PUBLIC_URL,
+  //     publicMetadata: {
+  //       throughInvitation: true,
+  //       role,
+  //     },
+  //   });
+  // } catch (error) {
+  //   console.log(error);
+  //   throw error;
+  // }
 
   return resposne;
 };

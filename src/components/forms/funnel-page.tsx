@@ -50,7 +50,8 @@ const CreateFunnelPage: React.FC<CreateFunnelPageProps> = ({
 }) => {
   const { toast } = useToast();
   const router = useRouter();
-  const [isLoading, setIsLoading] = useState(false)
+  const [isDeleteLoading, setDeleteIsLoading] = useState(false)
+  const [isCopying, setIsCopying] = useState(false)
   
   //ch
   const form = useForm<z.infer<typeof FunnelPageSchema>>({
@@ -157,7 +158,9 @@ const CreateFunnelPage: React.FC<CreateFunnelPageProps> = ({
             <div className="flex items-center gap-2 disabled:opacity-70">
               <Button
                 className="w-22 self-end"
-                disabled={form.formState.isSubmitting  || isLoading}
+                disabled={
+                  form.formState.isSubmitting || isCopying || isDeleteLoading
+                }
                 type="submit"
               >
                 {form.formState.isSubmitting ? <Loading /> : "Save Page"}
@@ -167,10 +170,12 @@ const CreateFunnelPage: React.FC<CreateFunnelPageProps> = ({
                 <Button
                   variant={"outline"}
                   className="w-22 self-end border-destructive text-destructive hover:bg-destructive disabled:opacity-70"
-                  disabled={form.formState.isSubmitting || isLoading}
+                  disabled={
+                    form.formState.isSubmitting || isCopying || isDeleteLoading
+                  }
                   type="button"
                   onClick={async () => {
-                      setIsLoading(true);
+                    setDeleteIsLoading(true);
                     const response = await deleteFunnelePage(defaultData.id);
                     await saveActivityLogNotification({
                       agencyId: undefined,
@@ -179,25 +184,31 @@ const CreateFunnelPage: React.FC<CreateFunnelPageProps> = ({
                     });
 
                     router.refresh();
-                       toast({
-                         title: "Success",
-                         description: "Funnel Page Deleted",
-                       });
-                      setIsLoading(false);
+                    toast({
+                      title: "Success",
+                      description: "Funnel Page Deleted",
+                    });
+                    setDeleteIsLoading(false);
                   }}
                 >
-                  {form.formState.isSubmitting || isLoading ? <Loading /> : <Trash />}
+                  {form.formState.isSubmitting || isDeleteLoading ? (
+                    <Loading />
+                  ) : (
+                    <Trash />
+                  )}
                 </Button>
               )}
               {defaultData?.id && (
                 <Button
                   variant={"outline"}
                   size={"icon"}
-                  disabled={form.formState.isSubmitting}
+                  disabled={
+                    form.formState.isSubmitting || isCopying || isDeleteLoading
+                  }
                   type="button"
                   onClick={async () => {
-                    setIsLoading(true)
-                   
+                    setIsCopying(true);
+
                     const response = await getFunnels(subaccountId);
                     const lastFunnelPage = response.find(
                       (funnel) => funnel.id === funnelId
@@ -221,10 +232,14 @@ const CreateFunnelPage: React.FC<CreateFunnelPageProps> = ({
                       description: "Saves Funnel Page Details",
                     });
                     router.refresh();
-                     setIsLoading(false);
+                    setIsCopying(false);
                   }}
                 >
-                  {form.formState.isSubmitting || isLoading ? <Loading /> : <CopyPlusIcon />}
+                  {form.formState.isSubmitting || isCopying ? (
+                    <Loading />
+                  ) : (
+                    <CopyPlusIcon />
+                  )}
                 </Button>
               )}
             </div>

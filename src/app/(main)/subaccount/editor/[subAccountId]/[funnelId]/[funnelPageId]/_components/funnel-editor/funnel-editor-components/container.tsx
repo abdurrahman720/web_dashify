@@ -30,14 +30,11 @@ const Container = ({ element }: Props) => {
 
     const componentType = e.dataTransfer.getData("componentType") as EditorBtns;
 
-    console.log(componentType)
+    console.log(componentType);
 
     const componentString = e.dataTransfer.getData("component") || "{}";
 
-
     const component: EditorElement = JSON.parse(componentString);
-
-   
 
     if (component.id) {
       dispatch({
@@ -102,7 +99,7 @@ const Container = ({ element }: Props) => {
             containerId: id,
             elementDetails: {
               content: {
-                src: "https://www.youtube.com/embed/A3l6YYkXzzg?si=zbcCeWcpq7Cwf8W1",
+                src: "https://www.youtube.com/embed/vlGzylNZGj4?si=RARjFOrG6_nhFe_u",
               },
               id: v4(),
               name: "Video",
@@ -119,7 +116,7 @@ const Container = ({ element }: Props) => {
             containerId: id,
             elementDetails: {
               content: {
-                src: "https://utfs.io/f/8125dc9c-5732-47c0-9feb-7f6b10311c61-eo9fdn.png",
+                src: "https://utfs.io/f/24ae825b-2b35-4c3b-afa4-1d0d0cdf9308-cehxha.jpg",
               },
               id: v4(),
               name: "Image",
@@ -245,7 +242,7 @@ const Container = ({ element }: Props) => {
         "max-w-full w-full": type === "container" || type === "2Col",
         "h-fit": type === "container",
         "h-full": type === "__body",
-        "overflow-scroll ": type === "__body" ,
+        "overflow-scroll ": type === "__body",
         // "pb-36": type === "__body" && !state.editor.liveMode,
         "flex flex-col md:!flex-row": type === "2Col",
         "!border-blue-500":
