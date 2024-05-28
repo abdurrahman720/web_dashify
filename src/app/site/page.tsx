@@ -19,7 +19,7 @@ export default async function Home() {
     active: true,
   });
 
-  console.log(prices);
+  // console.log(prices);
 
   return (
     <>

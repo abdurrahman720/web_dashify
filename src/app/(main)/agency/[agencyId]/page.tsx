@@ -71,7 +71,7 @@ const Page = async ({ params }: Props) => {
     // console.log(checkoutSessions)
 
     sessions = checkoutSessions.data;
-    console.log(checkoutSessions.data);
+    // console.log(checkoutSessions.data);
 
     totalClosedSessions = checkoutSessions.data
       .filter((session) => session.status === "complete")

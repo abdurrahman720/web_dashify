@@ -92,7 +92,7 @@ export const columns: ColumnDef<UsersWithAgencySubAccountPermissionsSidebarOptio
       header: "Owned Accounts",
         cell: ({ row }) => {
             
-          console.log(row)
+          // console.log(row)
              const isAgencyOwner = row.getValue("role") === "AGENCY_OWNER";
            //extracting the permissions that has access true (including subaccounts)
         const ownedAccounts = row.original?.Permissions.filter(
