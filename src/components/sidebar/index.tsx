@@ -20,7 +20,7 @@ const Sidebar = async ({ id, type }: Props) => {
 
   if (!details) return;
 
-  let sideBarLogo = user?.Agency?.agencyLogo || "/assets/wdfy-logo.svg.svg";
+  let sideBarLogo = user?.Agency?.agencyLogo || "/assets/wdfy-logo.svg";
 
   if (!isWhiteLabeledAgency) {
     if (type === "subaccount") {
