@@ -56,6 +56,18 @@ export default async function Home() {
         </div>
       </section>
       <section className="flex justify-center items-center flex-col gap-4 md:mt-[400px]">
+        <iframe
+          width="760"
+          height="515"
+          src="https://www.youtube.com/embed/zvLdn8DpGxs?si=UulMp5CzTDt7Maf4"
+          title="YouTube video player"
+          frameBorder="0"
+          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+          referrerPolicy="strict-origin-when-cross-origin"
+          allowFullScreen
+        ></iframe>
+      </section>
+      <section className="flex justify-center items-center flex-col gap-4 md:mt-[200px]">
         <h2 className="text-4xl text-center">Choose what fits you right</h2>
         <p className="text-muted-foreground text-center">
           Our straightforward pricing plans are tailored to meet your needs. If
@@ -63,7 +75,7 @@ export default async function Home() {
           ready to commit you can get started for free.
         </p>
         <div className="flex  justify-center gap-4 flex-wrap mt-6">
-          {prices.data.map((card) => (
+          {prices.data.slice(1, 3).map((card) => (
             <Card
               key={card.nickname}
               className={clsx(`w-[300px] flex flex-col justify-between`, {

@@ -1,5 +1,6 @@
 # WebDashify aka `wdfy` is a SaaS platform designed around a B2B2B model including agency and sub agency management, website  builder, media bucket, Kanban pipeline, custom user permissions, Stripe subscriptions, add-ons, live notifications and much more.
 
+![wdfy Preview](https://github.com/abdurrahman720/web_dashify/blob/main/public/assets/preview_wdfy.png?raw=true)
 
 ### Demo
 [![wdfy Preview](https://img.youtube.com/vi/zvLdn8DpGxs/0.jpg)](https://www.youtube.com/watch?v=zvLdn8DpGxs)
