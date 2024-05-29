@@ -1,36 +1,50 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# WebDashify aka `wdfy` is a SaaS platform designed around a B2B2B model including agency and sub agency management, website  builder, media bucket, Kanban pipeline, custom user permissions, Stripe subscriptions, add-ons, live notifications and much more.
 
-## Getting Started
 
-First, run the development server:
+### Demo
+[![wdfy Preview](https://img.youtube.com/vi/zvLdn8DpGxs/0.jpg)](https://www.youtube.com/watch?v=zvLdn8DpGxs)
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+### Tech Stacks
+- NextJs
+- Shadcn UI
+- NodeJs
+- PostgreSQL
+- Bun
+- Stripe
+- Jest
+- Docker
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
 
-This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Inter, a custom Google Font.
+# How it works:
+- Agency sign up with monthly subscription managed by Stripe, can create sub-agencies , connect Stripe account to receive payments and all the audits are directly shown on dashboard live. Agency manages subaccounts , users with permissions for each subaccounts 
 
-## Learn More
+- Each sub-accounts can be operated by multiple users, can store images like S3 ,can manage contacts (customer), can build fully drag-n-drop pipeline, lanes and tickets with customer, assign user and value. Websites or funnels can be build with custom subdomain.
 
-To learn more about Next.js, take a look at the following resources:
+- Sub-Accounts can sell own digital products on newly built funnel (website) , can get leads using contact form. Metircs of transactions and funnel performance are shown on sub-account dashboard graphically.
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
 
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+### Features in this application.
+- 🤯 Multivendor B2B2B Saas
+- 🏢 Agency and Sub accounts
+- 🌐 Unlimited funnel hosting
+- 🚀 Full Website & Funnel builder
+- 💻 Role-based Access
+- 🔄 Stripe Subscription plans
+- 🛒Stripe add-on products
+- 🔐 Connect Stripe accounts for all users! - Stripe Connect
+- 💳 Charge application fee per sale and recurring sales
+- 💰 Custom Dashboards
+- 📊 Media Storage
+- 📈 Stripe Product Sync
+- 📌Custom checkouts on funnels
+- 📢 Get leads from funnels
+- 🎨 Khanban board
+- 📂 Project management system
+- 🔗 Notifications
+- 📆 Funnel performance metrics
+- 🧾 Agency and subacc metrics
+- 🌙 Graphs and charts
+- ☀️ Light & Dark mode
+- 📄 Functioning landing page

@@ -63,7 +63,7 @@ export default async function Home() {
           ready to commit you can get started for free.
         </p>
         <div className="flex  justify-center gap-4 flex-wrap mt-6">
-          {prices.data.map((card) => (
+          {prices.data.slice(1,3).map((card) => (
             <Card
               key={card.nickname}
               className={clsx(`w-[300px] flex flex-col justify-between`, {
