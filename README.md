@@ -2,8 +2,8 @@
 
 ![wdfy Preview](https://github.com/abdurrahman720/web_dashify/blob/main/public/assets/preview_wdfy.png?raw=true)
 
-### Demo
-[![wdfy Preview](https://img.youtube.com/vi/zvLdn8DpGxs/0.jpg)](https://www.youtube.com/watch?v=zvLdn8DpGxs)
+## Watch demo:
+[![wdfy Preview](https://github.com/abdurrahman720/web_dashify/blob/main/public/assets/wdfy_demo_thumb.png?raw=true)](https://www.youtube.com/watch?v=zvLdn8DpGxs)
 
 ### Tech Stacks
 - NextJs
